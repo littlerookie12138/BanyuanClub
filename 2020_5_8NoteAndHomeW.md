@@ -142,7 +142,7 @@ URL ---- 本质为一个资源（统一资源定位符）
 
 **练习题：**  
 9.三个进程(A、B和C)同时运行，进程A占用File1但需要File2。进程B占用File3但需要File1。进程C占用File2但需要File3。为这几个进程画一个框图。这种情况是不是死锁?    
-答：这种情况即发生了死锁。![](/Users/edz/Desktop/4C7BB0DA-48AE-4CDB-BF9C-D556ADB96272.png)
+答：这种情况即发生了死锁。  ![](/Users/edz/Desktop/4C7BB0DA-48AE-4CDB-BF9C-D556ADB96272.png)  
 10.三个进程(A、B和C)同时运行，进程A占有File1，进程B占有File2但需要File1,进程C占有File3但需要File2。为这几个进程画一个框图。这种情况是不是死锁?如果不是，说明进程怎样最后完成它们的任务。
 
 答：这种情况不是死锁，三个进程等待A执行完毕释放File 1，然后B使用File 1，C等待B结束并释放File 2就可以完美实现各自的任务。![2](/Users/edz/Desktop/2.png)
