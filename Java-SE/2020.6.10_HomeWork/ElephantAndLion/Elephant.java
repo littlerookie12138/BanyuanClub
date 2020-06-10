@@ -1,0 +1,4 @@
+class Elephant {
+
+  int heightInCM;
+}
