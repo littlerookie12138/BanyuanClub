@@ -5,8 +5,8 @@ class Main {
 		TimeShow t1 = new TimeShow();
 
 		//自动获取系统时间
-		t.setTimeAuto();
-		System.out.println(t.timeToString());
+		// t.setTimeAuto();
+		// System.out.println(t.timeToString());
 
 		//手动设置时间
 		t1.setTime(23, 59, 59);

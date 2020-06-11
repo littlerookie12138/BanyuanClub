@@ -1,17 +1,59 @@
-class Main {
+class TimeShow {
+	int hour;
+	int minute;
+	int second;
 
-	public static void main(String[] args) {
-		TimeShow t = new TimeShow();
-		TimeShow t1 = new TimeShow();
 
-		//自动获取系统时间
-		t.setTimeAuto();
-		System.out.println(t.timeToString());
+	void setTime(int ahour, int aminute, int asecond) {
+		this.hour = ahour;
+		this.minute = aminute;
+		this.second = asecond;
+	}
 
-		//手动设置时间
-		t1.setTime(23, 59, 59);
-		t1.nextSecond();
-		System.out.println(t1.timeToString());
+	String timeToString() {
+		boolean hourIsSingle = false;
+		boolean minuteIsSingle = false;
+		boolean secondIsSingle = false;
 
+		String time = "0";
+		if (hour < 10) {
+			hourIsSingle = true;
+		}
+		if (minute < 10) {
+			minuteIsSingle = true;
+		}
+		if (second < 10) {
+			secondIsSingle = true;
+		}
+
+		if (hourIsSingle) {
+			time = "0" + hour;
+		}
+
+		if (minuteIsSingle) {
+			time = time + ":" + "0" + minute;
+		}
+
+		if (secondIsSingle) {
+			time = time + ":" + "0" + second;
+		}
+		
+		return time;
+	}
+
+	void nextSecond () {
+		second++;
+		if (second == 60) {
+			minute++;
+			second = 0;
+			if (minute == 60) {
+				minute = 0;
+				hour++;
+				if (hour == 24) {
+					hour = 0;
+					System.out.println("时间到了第二天。");
+				}
+			}
+		}
 	}
 }
