@@ -76,30 +76,13 @@ class theFigureGuess {
 				//判断数组中是否出现三种拳
 				isThree = isReapeat(tempResult, num - 1);
 				if (isThree == false) {
+					tempLen = getResult(tempResult, tempResult.length);
+					if (tempLen == 1) {
+						isSingle = true;
+					}
 					break;
 				}
-
-				System.out.println("==========未排序前==========");
-				for (int i = 0; i < num; i++) {
-					if (tempResult[i] != 0) {
-						System.out.println("第" + (i + 1) + "个是" + tempResult[i]);
-					}
-				}
 			}
-			break;
-
-			// for (int i = 0; i < tempLen - 1; i++) {
-			// 	if (tempResult[i] == 0) {
-			// 		tempResult[i] = tempResult[i + 1];
-			// 		tempResult[i + 1] = 0;
-			// 	}
-			// }
-
-			// tempLen = getResult(tempResult, tempLen);
-			// if (tempLen == 1) {
-			// 	isSingle = true;
-			// 	break;
-			// }
 		}
 
 

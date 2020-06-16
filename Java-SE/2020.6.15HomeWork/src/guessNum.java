@@ -22,7 +22,8 @@ class guessNum {
 	*/
 
 	public static void main(String[] args) {
-		int result = 5396;
+		Random ran = new Random();
+		int result = randomInt(1000, 10000, ran);
 		boolean isRight = false;
 		String a = String.valueOf(result);
 		if (checkRepeat(a)) {
@@ -34,6 +35,20 @@ class guessNum {
 			Scanner sc = new Scanner(System.in);
 			isRight = countRightNum(sc.nextInt(), result);
 		} while (!isRight);
+	}
+
+	public static int randomInt(int from, int where, Random ran) {
+		int n = where - from;
+		if (n > 0) {
+			return ran.nextInt(n) + from;
+		} else {
+			int r = 0;
+			do {
+				r = ran.nextInt();
+			} while(r < from || r >= where);
+
+			return r;
+		}
 	}
 
 	public static boolean checkRepeat(String target) {
