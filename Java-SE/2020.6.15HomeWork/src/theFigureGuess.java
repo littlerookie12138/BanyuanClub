@@ -18,6 +18,7 @@ class theFigureGuess {
 		//判断输入是否合法
 		if (num < 2 || num > 5) {
 			System.out.println("请输入正确的人数!");
+			return;
 		}
 
 		System.arraycopy(countResult(num), 0, result, 0, num);
@@ -44,6 +45,7 @@ class theFigureGuess {
 				break;
 			}
 		}
+		// getResult(result, num);
 
 		//判断是否继续进行同样的操作
 		boolean isSingle = false;
@@ -53,39 +55,51 @@ class theFigureGuess {
 			isSingle = true;
 		}
 		while (!isSingle) {
-			
-			System.arraycopy(result, 0, tempResult, 0, tempLen);
+
+			System.arraycopy(result, 0, tempResult, 0, num);
 			System.out.println("==========未排序前==========");
-			for (int i = 0; i < tempLen; i++) {
-				System.out.println(tempResult[i]);
+			for (int i = 0; i < num; i++) {
+				if (tempResult[i] != 0) {
+					System.out.println("第" + (i + 1) + "个是" + tempResult[i]);
+				}
 			}
 
 			//判断数组中是否出现三种拳
-			isThree = isReapeat(tempResult, tempLen - 1);
+			isThree = isReapeat(tempResult, num - 1);
+			System.out.println(isThree);
 
-			//如果出现了再来一波
+
+			// //如果出现了再来一波
 			while (isThree == true) {
-				System.arraycopy(countResult(tempLen), 0, tempResult, 0, tempLen - 1);
+				System.arraycopy(countResult(tempLen), 0, tempResult, 0, num);
 
 				//判断数组中是否出现三种拳
-				isThree = isReapeat(result, tempLen - 1);
+				isThree = isReapeat(tempResult, num - 1);
 				if (isThree == false) {
 					break;
 				}
-			}
 
-			for (int i = 0; i < tempLen - 1; i++) {
-				if (tempResult[i] == 0) {
-					tempResult[i] = tempResult[i + 1];
-					tempResult[i + 1] = 0;
+				System.out.println("==========未排序前==========");
+				for (int i = 0; i < num; i++) {
+					if (tempResult[i] != 0) {
+						System.out.println("第" + (i + 1) + "个是" + tempResult[i]);
+					}
 				}
 			}
+			break;
 
-			tempLen = getResult(tempResult, tempLen);
-			if (tempLen == 1) {
-				isSingle = true;
-				break;
-			}
+			// for (int i = 0; i < tempLen - 1; i++) {
+			// 	if (tempResult[i] == 0) {
+			// 		tempResult[i] = tempResult[i + 1];
+			// 		tempResult[i + 1] = 0;
+			// 	}
+			// }
+
+			// tempLen = getResult(tempResult, tempLen);
+			// if (tempLen == 1) {
+			// 	isSingle = true;
+			// 	break;
+			// }
 		}
 
 
@@ -138,7 +152,7 @@ class theFigureGuess {
 				}
 				System.out.println("第" + (i + 1) + "号出了" + tempp + "赢了");
 			}
-			
+
 		}
 		return index;
 	}
@@ -162,6 +176,28 @@ class theFigureGuess {
 
 		return result;
 	}
+
+	//统计猜拳结果有数组传进来的方法
+	// public static int[] countResult(int[] arr) {
+	// 	//用户输入剪子石头布
+	// 	Scanner sc = new Scanner(System.in);
+	// 	System.out.println("请输入您要出什么:(1表示拳头 2表示剪刀 3表示布)");
+	// 	int index = 0;
+	// 	int userGuess = sc.nextInt();
+
+	// 	//系统随机帮其他人出拳
+	// 	for (int i = 0; i < arr.length; i++) {
+	// 		Random random = new Random();
+	// 		if (arr[i] == 0) {
+	// 			break;
+	// 		}
+	// 		result[i] = randomInt(1, 4, random);
+	// 		index = i;
+	// 	}
+	// 	result[index + 1] = userGuess;
+
+	// 	return result;
+	// }
 
 	public static int randomInt(int from, int where, Random ran) {
 		int n = where - from;
@@ -199,14 +235,14 @@ class theFigureGuess {
 				break;
 			}
 
-			if (count1 >= 1 && count2 >= 1 && count3 >= 1) {
-				System.out.println("出现了三种不一样的拳");
-				return isReap = true;
-			} else if (count1 == len + 1 || count2 == len + 1 || count3 == len + 1) {
-				System.out.println("全部拳都一样");
-				return isReap = true;
-			}
+		}
 
+		if (count1 >= 1 && count2 >= 1 && count3 >= 1) {
+			System.out.println("出现了三种不一样的拳");
+			return isReap = true;
+		} else if (count1 == 0 && count2 == 0 && count3 != 0 || count2 != 0 && count1 == 0 && count3 == 0 || count1 != 0 && count2 == 0 && count3 == 0) {
+			System.out.println("全部拳都一样");
+			return isReap = true;
 		}
 
 
