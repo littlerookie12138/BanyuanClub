@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <pre>
+        1.什么是final类？
+
+    Java中有一些类，如String，Math等，就是final类的典型例子。
+    虽然在Java编程中并不经常使用final类和final方法，但它们有着与众不同的特点，即final类不能被继承，不能被覆盖，以及final类在执行速度方面比一般类快。
+
+    2.为何不能继承final类？
+
+    有时需要对继承加以限制。
+    例如某些处理特殊运算和操作的类，为了安全理由，不允许被其他类所继承。
+        final类没有子类，即它处于继承链的尾部（叶子类），或者除了自动继承Object之外，它们是独立存在的支持类，例如执行密码管理的类，处理数据库信息的管理类等等。
+
+    3.使用final类的另外一个理由是执行速度快。
+
+    由于它的方法不能够被覆盖，所以其地址引用和装载在编译期间完成，而不是在运行期间由JVM进行复杂的装载，因而简单和有效。
+        所以如果没有必要，或者不存在有继承的可能性时，尽量使用final类。
+        当然，在API类库中不多使用final类是因为它们是标准程序，希望在实际软件开发中得以广泛使用。
+
+    注意final数据和final类的不同。final数据指常量，即其值一旦初始化，就不能改变。而final类则指不能被其他类所继承的类。
+
+    4. 定义final类
+    在类名前加以关键字final，这个类就被定义为final类，如：
+
+    public final class SomeClass {
+        ...
+    }
+
+    或者：
+
+    public final class SomeClass extends SuperClass {
+        ...
+    }
+
+
+    当一个类被定义为final时，它的所有方法都自动成为final方法，但不影响对变量的定义。
+
+    5.不能覆盖final方法
+
+    我们可以在父类中设置某个方法为final方法。虽然这个类可以被继承，但子类不能够覆盖final方法。API类中的许多方法，如print()和println()，以及Math类中的所有方法都定义为final方法。在具体应用软件开发中，一些执行特殊性运算和操作的方法，可以定义为final方法。在方法的返回类型前加入关键字final，则定义该方法为final，如：
+
+    public final String printVersion() {        //定义final方法
+        return version;
+    }
+
+    6.final参数
+
+    final参数的含义如同final变量一样，是常数参数，即当方法接受了这个参数后，其值不能改变。如下代码中定义方法的参数为final：
+
+    public void setVerison(final String version) {  //定义常量参数
+        this.version = version;
+    }
+
+    在这个方法中使用如下语句产生语法错误：
+
+    version = "other version…";                     //非法操作
+
+    7.final类为何能提高执行速度？
+
+    final类可以提高执行速度主要原因：
+
+    1.不涉及继承和覆盖。
+    2.其地址引用和装载在编译时完成。
+    3.在运行时不要求JVM执行因覆盖而产生的动态地址引用而花费时间和空间。
+    4.与继承链上的一般对象相比，垃圾回收器在收回final对象所占据的地址空间时也相对简单快捷。
+
+    但在某些情况下使用final方法并不能取得提高执行速度的结果。因为并不是所有final方法其地址的装载和引用在编译时间完成。
+    假设类C继承了B，B继承了A，在类A中有final方法。对类C来讲，调用A的final方法的确是inline编译，即装载在编译时间完成；但对A和B来讲，可能没有调用final方法。而在执行期间，JVM动态装载的方法有可能并不是C所调用的final方法。这种情况下，则不能够取得提高执行速度的结果。当然，如果final方法在编译时间装载到JVM，而且没有在执行期间覆盖的，可以取得inline效益，提高执行速度。
+    自己补充：
+
+    inline 机制：当在调用final方法的时候 直接将方法体插入到调用处 而不是进行方法的调用
+
+    final的其他知识点：
+
+    final变量必须在声明的时候初始化或者在构造器中初始化，否则就会报编译错误。
+    在匿名类中所有变量都必须是final变量
+    </pre>
+</body>
+</html>

@@ -33,9 +33,9 @@ public class Main {
     //计算猜拳结果
     public static int getResult(Player[] players, int num) {
         for (int i = 0; i < num; i++) {
-            players[i]
+//            players[i]
         }
-        int[] temp = new int[len];
+        int[] temp = new int[num];
         System.arraycopy(result, 0, temp, 0, len);
         int index = len;
         for (int i = 0; i < len; i++) {
