@@ -1,31 +1,34 @@
-interface P {
-    String p = "PPPP";
+interface X
+{
+    char c = 'A';
 
-    String methodP();
+    char methodX();
 }
 
-interface Q extends P {
-    String q = "QQQQ";
-
-    String methodQ();
-}
-
-class R implements P, Q {
-    public String methodP() {
-        return q + p;
+class Y implements X
+{
+    {
+        System.out.println(c);
     }
 
-    public String methodQ() {
-        return p + q;
+    public char methodX()
+    {
+        char c = this.c;
+
+        return ++c;
     }
 }
 
-public class Test {
-    public static void main(String[] args) {
-        R r = new R();
+public class Test
+{
+    public static void main(String[] args)
+    {
+        Y y = new Y();
 
-        System.out.println(r.methodP());
+        System.out.println(y.methodX());
 
-        System.out.println(r.methodQ());
+        System.out.println(y.c);
+
+        System.out.println(X.c);
     }
 }

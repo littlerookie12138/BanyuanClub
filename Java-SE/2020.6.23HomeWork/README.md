@@ -235,7 +235,7 @@ public class MainClass
 		abc.methodOne();
 	}
 }
-
+输出结果为：互相调用无法停止
 ```
 #### 10.
 ```
@@ -273,6 +273,7 @@ public class MainClass
         System.out.println(X.c);
     }
 }
+输出结果为：A B A A
 ```
 
 #### 11.
