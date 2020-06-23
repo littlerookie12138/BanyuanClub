@@ -22,11 +22,11 @@ public class Commission extends Hourly{
     }
 
     public void addSales(double totalSale) {
-        this.totalSale = totalSale;
+        this.totalSale += totalSale;
     }
 
     public double pay() {
-        double paySalary = totalSale + super.pay();
+        double paySalary = totalSale * salaryRate + super.pay();
         totalSale = 0;
         return paySalary;
     }
