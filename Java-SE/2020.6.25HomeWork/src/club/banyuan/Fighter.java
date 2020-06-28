@@ -125,7 +125,7 @@ public class Fighter implements Weapon, Skills {
                 if (to.buff) {
                     if (critBuff) {
                         crit += 0.2;
-                        if (crit <= 0.4) {
+                        if (crit <= 0.5) {
                             hurtHP = (int) (100 * 2 * 0.85);
                             to.hurt(hurtHP);
                             System.out.println("灭绝师太灭情灭义，遁入志高境界，伤害暴击");
