@@ -21,6 +21,7 @@ public class Main {
         //当两人的血量都大于0时持续战斗
         while (fighter1.getHP() > 0 && fighter2.getHP() > 0) {
             if (count % 2 == 0) {
+
                 //张无忌出手
                 if (fighter1.getVertigoOrNot()) {
                     //说明被眩晕了
