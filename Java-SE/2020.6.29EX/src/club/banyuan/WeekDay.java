@@ -12,12 +12,14 @@ public enum WeekDay {
     ;
 
     private final String dayInChinese;
+    private boolean isRigth = false;
 
     WeekDay(String dayInChinese) {
         this.dayInChinese = dayInChinese;
     }
 
     public boolean isHoliday() {
+        if (isRight()) return false;
 
         if (this.name().equals(SATURDAY.name()) || this.name().equals(SUNDAY.name())) {
             return true;
@@ -26,7 +28,25 @@ public enum WeekDay {
         }
     }
 
+    private boolean isRight() {
+        for (WeekDay value : WeekDay.values()) {
+            if (this.name().equals(value.name())) {
+                isRigth = true;
+            }
+        }
+        if (!isRigth) {
+            System.out.println("查询的枚举类型不合法！");
+            return true;
+        }
+        return false;
+    }
+
     public boolean isWeekDay() {
+
+        if (isRight()) {
+            return false;
+        }
+
         if (this.name().equals(SATURDAY.name()) || this.name().equals(SUNDAY.name())) {
             return false;
         } else {
