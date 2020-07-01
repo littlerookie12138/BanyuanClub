@@ -1,4 +1,4 @@
-package club.banyuan;
+package club.banyuan.exception;
 
 /**
  * 基本异常类，用于表示计算器内可能发生的异常。

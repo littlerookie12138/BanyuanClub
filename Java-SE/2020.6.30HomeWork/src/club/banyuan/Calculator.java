@@ -1,17 +1,20 @@
 package club.banyuan;
 
+import club.banyuan.exception.CalculatorException;
+import club.banyuan.exception.DivideByZeroException;
+import club.banyuan.exception.IllegalInputException;
+import club.banyuan.exception.QuitException;
+
 import java.util.regex.*;
 
 /**
  * Calculator类提供了用于解析包含简单表达式的输入字符串以及计算表达式结果的功能。
  */
 
-public class Calculator {
+public class Calculator implements ExceptionMessage {
 
     public Calculator() {
     }
-
-
 
     public static String arrayToString(String[] tokens) {
         StringBuffer sb1 = new StringBuffer();
@@ -31,7 +34,6 @@ public class Calculator {
         Pattern pattern = Pattern.compile("[\\+\\-\\*\\/]");
         return pattern.matcher(token).matches();
     }
-
     /**
      * 0 个符号: IllegalInputException: "Illegal Token Length"
      * 1 个符号:
@@ -61,14 +63,15 @@ public class Calculator {
         switch (tokens.length) {
             case 0:
                 // TODO: complete the cases
-                throw new IllegalInputException("IllegalInputException:" + tokens.length);
+                throw new IllegalInputException(ILLEGAL_INPUT_EXCEPTION + tokens.length);
             case 1:
                 // 只有一种情况，用户输入 quit
                 // TODO: complete the cases
-                if (arrayToString(tokens).equals("quit")) {
+                // equalsIgnoreCase 不区分大小写的忽略
+                if (arrayToString(tokens).equalsIgnoreCase("quit")) {
                     throw new QuitException("QuitException");
                 } else {
-                    throw new IllegalInputException("Illegal Argument");
+                    throw new IllegalInputException(ILLEGAL_ARGUMENT);
                 }
             case 2:
                 // 只有一种情况，用户输入 负数
@@ -76,9 +79,11 @@ public class Calculator {
                 if (tokens[0].equals("-") && (isInteger(tokens[1]))) {
                     throw new IllegalInputException(arrayToString(tokens));
                 } else if (tokens[0].equals("-") && !(isInteger(tokens[1]))) {
-                    throw new IllegalInputException("Illegal Argument");
-                } else {
-                    throw new IllegalInputException("Illegal Operator");
+                    throw new IllegalInputException(ILLEGAL_ARGUMENT);
+                } else if (!isInteger(tokens[0]) && isOperator(tokens[1])) {
+                    throw new IllegalInputException(ILLEGAL_ARGUMENT);
+                } else if (isInteger(tokens[0]) && !isOperator(tokens[1])) {
+                    throw new IllegalInputException(ILLEGAL_OPERATOR);
                 }
             case 3:
                 // 计算表达式
@@ -86,13 +91,15 @@ public class Calculator {
                 if (tokens[1].equals("+") && (isInteger(tokens[0])) && (isInteger(tokens[2]))) {
                     return Integer.parseInt(tokens[0]) + Integer.parseInt(tokens[2]);
                 } else if (tokens[1].equals("/") && (isInteger(tokens[0])) && (isInteger(tokens[2]))) {
-                    return Integer.parseInt(tokens[0]) / Integer.parseInt(tokens[2]);
-                } else if (tokens[1].equals("/") && (isInteger(tokens[0])) && (tokens[2].equals("0"))) {
-                    throw new DivideByZeroException("除数为0");
+                    if (tokens[2].equals("0")) {
+                        throw new DivideByZeroException("除数为0");
+                    } else {
+                        return Integer.parseInt(tokens[0]) / Integer.parseInt(tokens[2]);
+                    }
                 } else if ((!isInteger(tokens[0]) || !isInteger(tokens[2])) && isOperator(tokens[1])) {
-                    throw new IllegalInputException("Illegal Argument");
+                    throw new IllegalInputException(ILLEGAL_ARGUMENT);
                 } else if (!isOperator(tokens[1])) {
-                    throw new IllegalInputException("Illegal Operator");
+                    throw new IllegalInputException(ILLEGAL_OPERATOR);
                 } else if (tokens[1].equals("-") && (isInteger(tokens[0])) && (isInteger(tokens[2]))) {
                     return Integer.parseInt(tokens[0]) - Integer.parseInt(tokens[2]);
                 } else if (tokens[1].equals("*") && (isInteger(tokens[0])) && (isInteger(tokens[2]))) {
@@ -102,7 +109,7 @@ public class Calculator {
             default:
                 // 4个或等多操作符号抛出异常
                 // TODO: complete the cases
-                throw new IllegalInputException("IllegalInputException:" + tokens.length);
+                throw new IllegalInputException(ILLEGAL_INPUT_EXCEPTION + tokens.length);
         }
 
 
@@ -145,13 +152,17 @@ public class Calculator {
             return true;
         } catch (IllegalInputException e) {
             // TODO: complete implementation.
-            System.out.println("Illegal input: " + e.getIllegalInputType());
+            System.out.println("Illegal input: " + e.getMessage());
         } catch (CalculatorException e) {
             // 这捕获了剩下的CalculatorException情况：DivideByZeroException
             // TODO: complete implementation.
-            System.out.println("Tried to divide by zero");
+            if (e instanceof DivideByZeroException) {
+                System.out.println("Tried to divide by zero");
+            }
         }finally {
-            System.out.println("Input is :" + input);
+            if (tokens.length > 0 && !tokens[0].equalsIgnoreCase("quit")) {
+                System.out.println("Input is :" + input);
+            }
         }
 
         // TODO: complete implementation.

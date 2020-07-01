@@ -1,4 +1,4 @@
-package club.banyuan;
+package club.banyuan.exception;
 
 public class QuitException extends CalculatorException{
     public QuitException() {

@@ -28,6 +28,7 @@ public class Driver {
 //       解析，计算并报告结果
       if (Calculator.parseAndCompute(input)) {
         // 指定程序退出
+        System.out.println("Thanks!");
         break;
       }
 
