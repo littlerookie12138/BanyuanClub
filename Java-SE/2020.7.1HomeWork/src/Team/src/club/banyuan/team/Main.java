@@ -1,4 +1,4 @@
-package Team.src.club.banyuan.team;
+package club.banyuan.team;
 
 import java.util.ArrayList;
 import java.util.List;

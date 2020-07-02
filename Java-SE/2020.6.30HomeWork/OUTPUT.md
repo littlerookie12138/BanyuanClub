@@ -27,6 +27,7 @@ class Main {
       }
       finally {
          System.out.println("Inside finally block ");
+         //return; 如果在finally会导致上面抛出的异常被吃掉
       }
   }
 }

@@ -1,18 +1,17 @@
-package club.banyuan;
+
 
 public class ObjectPairDriver {
-
   /**
    * 创建几个体育场对，然后打印容量最大的体育场名称。
    */
   public static void main(String[] args) {
 
     ObjectPair[] stadiums = new ObjectPair[3];
-    stadiums[0] = new ObjectPair("五棵松", 25000);
-    stadiums[1] = new ObjectPair("鸟巢", 109901);
+    stadiums[0] = new ObjectPair("五棵松", "25000");
+    stadiums[1] = new ObjectPair("鸟巢", "109901");
     stadiums[2] = new ObjectPair("奥体中心", "66,233");
 
-    System.out.println(stadiums[0]);
+    System.out.println(largestStadium(stadiums));
   }
 
   /**
@@ -22,8 +21,15 @@ public class ObjectPairDriver {
    * @return 容量最大的体育馆的名称
    */
   public static String largestStadium(ObjectPair[] stadiums) {
-
-    return "";
+    int maxCapacity = 0;
+    ObjectPair maxObj = null;
+    for (ObjectPair stadium : stadiums) {
+      if (maxCapacity < Integer.parseInt((String) stadium.getSecond())) {
+        maxCapacity = Integer.parseInt((String) stadium.getSecond());
+        maxObj = stadium;
+      }
+    }
+    return maxObj.getFirst().toString();
   }
 
 }

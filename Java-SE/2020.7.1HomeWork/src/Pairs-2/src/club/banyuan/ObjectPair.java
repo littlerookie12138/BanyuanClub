@@ -1,4 +1,4 @@
-package club.banyuan;
+
 
 public class ObjectPair {
 

@@ -1,15 +1,26 @@
-package club.banyuan;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class Pairs<K, V> implements Iterable<Pair<K, V>> {
 
   /* 声明一对对象的固定大小的数组（最多10个元素） */
+  private int index;
+  private K first;
+  private V second;
 
   /**
    * 创建一个集合，该集合将存储成对添加的项目。
    */
+  private List<Pair<K, V>> pairs = new ArrayList<>(10);
+
   public Pairs() {
+
   }
 
+  public List<Pair<K,V>> getPairs() {
+    return pairs;
+  }
   /**
    * 创建一个新的对，并在有空间的情况下将其添加到集合中。
    *
@@ -17,7 +28,11 @@ public class Pairs<K, V> implements Iterable<Pair<K, V>> {
    * @param second The second object.
    */
   public boolean addPair(K first, V second) {
-    return true;
+//    if (pairs.size() < 10) {
+      return pairs.add(new Pair<K, V>(first, second));
+//    } else {
+//      throw new RuntimeException("列表满了");
+//    }
   }
 
 
@@ -32,10 +47,13 @@ public class Pairs<K, V> implements Iterable<Pair<K, V>> {
    * 按照规定抛出异常
    */
   private class PairIterator implements Iterator<Pair<K, V>> {
+    private List<Pair<K, V>> pairs= new ArrayList<>(Pairs.this.pairs);
+    private int next;
+    private Pair<K, V> cur;
 
     @Override
     public boolean hasNext() {
-      throw new UnsupportedOperationException();
+     return pairs.size() > next;
     }
 
     /**
@@ -43,7 +61,12 @@ public class Pairs<K, V> implements Iterable<Pair<K, V>> {
      */
     @Override
     public Pair<K, V> next() {
-      throw new UnsupportedOperationException();
+      if (hasNext()) {
+        cur = pairs.get(next++);
+        return cur;
+      } else {
+        throw new RuntimeException("没有下一个元素了");
+      }
     }
 
     /**
@@ -51,7 +74,10 @@ public class Pairs<K, V> implements Iterable<Pair<K, V>> {
      */
     @Override
     public void remove() {
-      throw new UnsupportedOperationException();
+      if (cur != null) {
+        Pairs.this.pairs.remove(cur);
+        cur = null;
+      }
     }
   }
 

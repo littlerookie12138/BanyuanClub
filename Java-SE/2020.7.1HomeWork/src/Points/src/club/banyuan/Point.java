@@ -1,5 +1,7 @@
 package Points.src.club.banyuan;
 
+import java.util.Iterator;
+
 public class Point {
 
   private int x;
@@ -24,5 +26,13 @@ public class Point {
 
   public void setY(int y) {
     this.y = y;
+  }
+
+  @Override
+  public String toString() {
+    return "Point{" +
+            "x=" + x +
+            ", y=" + y +
+            '}';
   }
 }
