@@ -87,7 +87,9 @@ public class PersonalRecommender implements Recommender{
                     finalList.addAll(likes.get(key));
                 }
         });
-        finalList.remove(project);
+        List<String> removeList = new ArrayList<>();
+        removeList.add(project);
+        finalList.removeAll(removeList);
         return finalList;
     }
 

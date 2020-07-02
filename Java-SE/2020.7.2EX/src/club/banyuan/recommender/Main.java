@@ -35,5 +35,6 @@ public class Main {
         System.out.println(personalRecommender.recommendByProject("3"));
 
         System.out.println(personalRecommender.mayLike("C"));
+        System.out.println(personalRecommender.mayLikeByProject("3"));
     }
 }
