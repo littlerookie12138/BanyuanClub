@@ -2,10 +2,11 @@ package club.banyuan;
 
 public class Vehicle {
     private String type;
-    private int appearenceYear;
+    private int appearanceYear;
     private String factory;
-    private String id;
+    private long id;
     private String lastMaintenanceTime;
+    private boolean isRented;
 
     public String getType() {
         return type;
@@ -15,12 +16,12 @@ public class Vehicle {
         this.type = type;
     }
 
-    public int getAppearenceYear() {
-        return appearenceYear;
+    public int getAppearanceYear() {
+        return appearanceYear;
     }
 
-    public void setAppearenceYear(int appearenceYear) {
-        this.appearenceYear = appearenceYear;
+    public void setAppearanceYear(int appearanceYear) {
+        this.appearanceYear = appearanceYear;
     }
 
     public String getFactory() {
@@ -31,11 +32,11 @@ public class Vehicle {
         this.factory = factory;
     }
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 

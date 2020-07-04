@@ -1,5 +1,6 @@
 package club.banyuan;
 
+
 public class Car extends Vehicle{
     private int seatNum;
 
@@ -9,5 +10,19 @@ public class Car extends Vehicle{
 
     public void setSeatNum(int seatNum) {
         this.seatNum = seatNum;
+    }
+
+    public void setSeatNum(String seatNum) {
+        this.seatNum = seatNum;
+    }
+
+    @Override
+    public String toString() {
+        return "Car {" +
+                "汽车编号:" + super.getId() + '\n' +
+                "生产年份:" + super.getAppearanceYear() + '\n' +
+                "厂家:" + super.getFactory() + '\n' +
+                "保养日期:" + super.getLastMaintenanceTime() + '\n' +
+                '}';
     }
 }

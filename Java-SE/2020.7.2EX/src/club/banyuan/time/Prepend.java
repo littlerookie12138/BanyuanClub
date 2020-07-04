@@ -1,6 +1,7 @@
 package club.banyuan.time;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -26,40 +27,60 @@ import java.util.List;
 public class Prepend implements Timer{
   private static long timeStart;
   private static long timeEnd;
+  private boolean isStart;
+
   public static void main(String args[]) {
     Prepend time = new Prepend();
-    LinkedList<Integer> list = new LinkedList<>();
-    for (int i = 0; i < 1000000; i++) {
+    LinkedList<Integer> linkedList = new LinkedList<>();
+    List<Integer> list = new ArrayList<>();
+    for (int i = 0; i < 100000; i++) {
       if (i == 0) {
         time.start();
       }
-      list.add(i);
+      linkedList.add(0, i);
     }
     time.stop();
     System.out.println(time.getTimeMillisecond());
+    time.reset();
+
+
+    for (int i = 0; i < 100000; i++) {
+      if (i == 0) {
+        time.start();
+      }
+      list.add(0, i);
+    }
+    time.stop();
+    System.out.println("数组存储时间 = " + time.getTimeMillisecond());
     time.reset();
   }
 
   @Override
   public void start() throws IllegalStateException {
-    if (timeEnd != 0) {
+    if (isStart) {
       throw new IllegalStateException("上一次计时未停止！");
     }
     timeStart = System.currentTimeMillis();
+    isStart = true;
   }
 
   @Override
   public void stop() throws IllegalStateException {
-    if (timeStart == 0) {
+    if (!isStart) {
       throw new IllegalStateException("尚未开始计时无法调用停止计时！");
     }
     timeEnd = System.currentTimeMillis();
+    isStart = false;
   }
 
   @Override
   public void reset() {
-    timeStart = 0;
-    timeEnd = 0;
+    if (!isStart) {
+      timeStart = 0L;
+      timeEnd = 0L;
+    } else {
+      throw new IllegalStateException("未停止或未开始无法重置");
+    }
   }
 
   @Override

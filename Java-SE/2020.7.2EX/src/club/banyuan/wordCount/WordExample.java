@@ -32,7 +32,7 @@ public class WordExample {
       String word = sc.next();
       System.out.println(word);
 
-      String[] wordCut = word.split(":,\\.");
+      String[] wordCut = word.split(":\\W+");
 
       Set<String> wordSet = map.keySet();
       for (int i = 0; i < wordCut.length; i++) {

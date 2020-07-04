@@ -10,9 +10,15 @@ public class Class {
     }
 
     //升序
-    public static List<Student> ascendingOrder(Set<Student> set) {
+    public static List<Student> ascendingOrder(Set<Student> set, boolean isAscendOrDes) {
         List<Student> list = new ArrayList<>(set);
-        Collections.sort(list);
+        Collections.sort(list, (o1, o2) -> {
+            if (isAscendOrDes) {
+                return o1.getId() - o2.getId();
+            } else {
+                return o2.getAge() - o1.getAge();
+            }
+        });
         return list;
     }
 
@@ -34,7 +40,7 @@ public class Class {
         print(classRoster);
         System.out.println(new Student(6, "王三", 14).equals(new Student(7, "王四", 14)));
         //升序排列
-        System.out.println(ascendingOrder(classRoster));
+        System.out.println(ascendingOrder(classRoster, true));
         //降序排列
 //        ListIterator<Student> listIterator = ascendingOrder(classRoster).listIterator();
 //        for (listIterator = ascendingOrder(classRoster).listIterator(); listIterator.hasNext(); ) {
@@ -47,7 +53,7 @@ public class Class {
             @Override
             public int compare(Student o1, Student o2) {
                 if (!o1.equals(o2)) {
-                    return o2.getAge();
+                    return o2.getAge() - o1.getAge();
                 }
                 return 0;
             }
