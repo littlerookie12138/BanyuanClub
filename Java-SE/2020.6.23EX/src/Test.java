@@ -1,34 +1,20 @@
-interface X
-{
-    char c = 'A';
-
-    char methodX();
-}
-
-class Y implements X
-{
-    {
-        System.out.println(c);
-    }
-
-    public char methodX()
-    {
-        char c = this.c;
-
-        return ++c;
-    }
-}
-
 public class Test
 {
     public static void main(String[] args)
     {
-        Y y = new Y();
+        String s1 = "good";
+        String str = new String(s1);
+        char[] char1 = {'a', 'b', 'c'};
+        change(str, char1);
 
-        System.out.println(y.methodX());
+        System.out.println(str + char1[0] );
 
-        System.out.println(y.c);
-
-        System.out.println(X.c);
     }
+
+    public static void change (String str, char[] char1) {
+        str = "test ok";
+        char1[0] = 'g';
+    }
+
 }
+
