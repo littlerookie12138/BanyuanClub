@@ -1,19 +1,32 @@
 package club.banyuan;
 
-public class ReverseHelloMultithreaded {
+public class ReverseHelloMultithreaded extends Thread{
+    private int num;
+
+    public ReverseHelloMultithreaded(int num) {
+        this.num = num;
+    }
 
     public static void doReverseHello() throws InterruptedException {
+        ReverseHelloMultithreaded thread = new ReverseHelloMultithreaded(1);
+        thread.start();
+    }
 
-        for (int i = 50; i > 0; i--) {
-            Thread thread = new Thread() {
-                public void run() {
-                    Thread thread = new Thread();
-                    System.out.print("Hello from thread ");
-                }
-            };
+    @Override
+    public void run() {
+        if (num < 50) {
+            ReverseHelloMultithreaded thread = new ReverseHelloMultithreaded(num + 1);
             thread.start();
-            Thread.sleep(50);
-            System.out.println(i);
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
+        System.out.println("Hello from thread " + num);
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        doReverseHello();
     }
 }
