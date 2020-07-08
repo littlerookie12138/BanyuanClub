@@ -5,9 +5,13 @@ public class Driver {
     CellularPhone aPhone = new CellularPhone("Phone");
     aPhone.start();
 
+
+
     // 创建一个消息生成器
-    MessageGenerator aPhoneMessage = new MessageGenerator("aPhoneMessage", aPhone);
-    aPhoneMessage.start();
+    MessageGenerator aPhoneMessageMather = new MessageGenerator("Mother", aPhone);
+    MessageGenerator aPhoneMessageFather = new MessageGenerator("Father", aPhone);
+    aPhoneMessageMather.start();
+    aPhoneMessageFather.start();
 
     // 创建两个呼叫生成器，他们坚持不断地给电话打电话。
     PhoneCallGenerator pcGen1 = new PhoneCallGenerator("Tom", aPhone);

@@ -25,16 +25,19 @@ public class PhoneCallGenerator extends Thread {
         int length = randomGenerator.nextInt(maxCallLength);
 
         // 试着发起一个呼叫
-        if (phone.startCall(getName(), Integer.toString(counter))) {
-          // 呼叫开始，休眠随机生成的时间，然后结束通话
-          sleep(length * 1000);
-          phone.endCall(getName(), Integer.toString(counter));
-        } else {
-          // Sleep让其他线程有机会，然后告诉用户调用已被放弃
-          System.out.println("<" + this.getName()
-              + ">: Busy, call dropped");
-          sleep(length * 1000);
+        synchronized (phone) {
+          if (phone.startCall(getName(), Integer.toString(counter))) {
+            // 呼叫开始，休眠随机生成的时间，然后结束通话
+            sleep(length * 1000);
+            phone.endCall(getName(), Integer.toString(counter));
+          } else {
+            // Sleep让其他线程有机会，然后告诉用户调用已被放弃
+            System.out.println("<" + this.getName()
+                    + ">: Busy, call dropped");
+            sleep(length * 1000);
+          }
         }
+
         // 让其他线程有机会
         sleep(randomGenerator.nextInt(2));
       }
