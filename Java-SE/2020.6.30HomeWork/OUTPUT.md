@@ -270,7 +270,7 @@ public int myMethod(){
 ```
  try {
 
-      File file = new File("filename.txt");
+      Files file = new Files("filename.txt");
 
       Scanner sc = new Scanner(file);
 
@@ -295,7 +295,7 @@ public int myMethod(){
 ```
 try {
 
-      File file = new File("filename.txt");
+      Files file = new Files("filename.txt");
 
       Scanner sc = new Scanner(file);
 
