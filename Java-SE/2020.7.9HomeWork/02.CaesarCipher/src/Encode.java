@@ -6,6 +6,8 @@
  */
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Encode {
 
@@ -31,16 +33,19 @@ public class Encode {
 
     int num = 0;
     char ch;
-    String result = "";
+    List<String> list = new ArrayList<>();
+//    StringBuilder result = new StringBuilder();
 
     while ((num = inStream.read()) != -1) {
       ch = (char) num;
-      String s = caesarEncode(ch) + " ";
-      System.out.println(s);
-//      result += s;
+      String s = caesarEncode(ch) + "";
+
+      list.add(s);
+      System.out.println(list);
     }
 
-    outStream.write(result);
+    System.out.println(list);
+    outStream.write("123");
     System.out.println("加密成功！");
   }
 
