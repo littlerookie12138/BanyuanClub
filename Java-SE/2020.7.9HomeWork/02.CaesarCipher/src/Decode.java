@@ -15,8 +15,18 @@ public class Decode {
     //完成此部分代码，调用 caesarDecode 对传入的inputFilePath文件进行解密
     //将解密后的文本输出到 outputFilePath 文件中
     //尝试将alice.code进行解密
-    inStream = new BufferedReader(new FileReader(inputFilePath));
-    outStream = new BufferedWriter(new FileWriter(outputFilePath));
+    try {
+      inStream = new BufferedReader(new FileReader(inputFilePath));
+      outStream = new BufferedWriter(new FileWriter(outputFilePath));
+
+//      String s = inStream.readLine();
+//      while (s != null) {
+//
+//      }
+
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
 
     int num = 0;
     char ch;
@@ -24,9 +34,9 @@ public class Decode {
 
     while ((num = inStream.read()) != -1) {
       ch = (char) num;
-      outStream.write(caesarDecode(ch) + "");
+      outStream.write(caesarDecode(ch));
     }
-
+    outStream.close();
     System.out.println("解密成功！");
   }
 
