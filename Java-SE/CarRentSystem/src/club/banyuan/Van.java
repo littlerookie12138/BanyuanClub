@@ -1,7 +1,16 @@
 package club.banyuan;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Van extends Vehicle{
     private String fuelType;
+    private List<String> rentRecord = new ArrayList();
+
+    public List<String> getRentRecord() {
+        return rentRecord;
+    }
+
 
     public String getFuelType() {
         return fuelType;

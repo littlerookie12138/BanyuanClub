@@ -1,7 +1,9 @@
 package club.banyuan;
 
 
-public class Car extends Vehicle{
+import java.io.Serializable;
+
+public class Car extends Vehicle implements Serializable {
     private int seatNum;
 
     public int getSeatNum() {
@@ -12,9 +14,9 @@ public class Car extends Vehicle{
         this.seatNum = seatNum;
     }
 
-    public void setSeatNum(String seatNum) {
-        this.seatNum = seatNum;
-    }
+//    public void setSeatNum(String seatNum) {
+//        this.seatNum = seatNum;
+//    }
 
     @Override
     public String toString() {

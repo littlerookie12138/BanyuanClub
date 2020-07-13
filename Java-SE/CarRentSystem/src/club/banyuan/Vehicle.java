@@ -4,9 +4,17 @@ public class Vehicle {
     private String type;
     private int appearanceYear;
     private String factory;
-    private long id;
+    private String id;
     private String lastMaintenanceTime;
-    private boolean isRented;
+    private boolean isRented = false;
+
+    public void setRented(boolean rented) {
+        isRented = rented;
+    }
+
+    public boolean isRented() {
+        return isRented;
+    }
 
     public String getType() {
         return type;
@@ -32,11 +40,11 @@ public class Vehicle {
         this.factory = factory;
     }
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

@@ -1,3 +1,5 @@
+import com.alibaba.fastjson.JSONObject;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,13 +27,15 @@ class VideoStore {
             File itsParent = sourcesFile.getParentFile();
             if (!itsParent.exists()) {
                 itsParent.mkdirs();
+            } else {
+                sourcesFile.createNewFile();
             }
 
             System.out.println(sourcesFile.createNewFile() ? "成功" : "失败");
         }
 
-        try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(sourcesFile))){
-            objectOutputStream.writeObject(videos);
+        try (FileOutputStream fileOutputStream = new FileOutputStream(sourcesFile)){
+            fileOutputStream.write(videos.toString().getBytes());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -103,10 +107,23 @@ class VideoStore {
     }
 
     //加载配置文件中的资源
-    public void load() {
-        try (ObjectInputStream objectInputStream = new ObjectInputStream(new FileInputStream(PATH))){
-            Object o = objectInputStream.readObject();
-            videos = (List<Video>) o;
+    public void load() throws Exception{
+        File sourcesFile = new File(PATH);
+        if (!sourcesFile.exists()) {
+            //判断文件的父集目录是否存在
+            File itsParent = sourcesFile.getParentFile();
+            if (!itsParent.exists()) {
+                itsParent.mkdirs();
+            } else {
+                System.out.println(sourcesFile.createNewFile() ? "成功" : "失败");
+            }
+
+        }
+
+        try (FileInputStream fileInputStream = new FileInputStream(PATH)){
+            byte[] bytes = fileInputStream.readAllBytes();
+            String jsonString = new String(bytes);
+            List<Video> videos = JSONObject.parseArray(jsonString, Video.class);
         } catch (Exception e) {
             e.printStackTrace();
         }
