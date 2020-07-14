@@ -32,8 +32,10 @@ public class TcpServer {
 
                 if ("加密".equals(way)) {
                     decryptFile(bufferedReader);
+
                 } else if ("解密".equals(way)) {
                     encryptFile(bufferedReader);
+
                 }
             }
         } catch (IOException e) {

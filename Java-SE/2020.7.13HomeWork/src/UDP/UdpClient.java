@@ -20,7 +20,7 @@ public class UdpClient {
             String[] str = sourceText.split(" ");
             if (!checkInput(str)) {
                 System.out.println("输出不合法!");
-                return;
+                continue;
             }
             byte[] msg = str[2].getBytes();
             DatagramPacket pocket = new DatagramPacket(msg, msg.length, InetAddress.getByName(str[0]), Integer.parseInt(str[1]));
@@ -31,6 +31,7 @@ public class UdpClient {
     }
 
     private static boolean checkInput(String[] str) {
+
         if (str.length != 3) {
             System.out.println("长度不对");
             return false;
@@ -46,7 +47,12 @@ public class UdpClient {
     }
 
     private static boolean checkPort(String s) {
-        int port = Integer.parseInt(s);
+        int port = 0;
+        try {
+            port = Integer.parseInt(s);
+        } catch (NumberFormatException e) {
+            return false;
+        }
         if (port < 0 || port > 65535) {
             return false;
         }
