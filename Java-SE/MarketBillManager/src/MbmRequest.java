@@ -1,5 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -49,13 +51,14 @@ public class MbmRequest {
         return mbmRequest;
     }
 
-    public Map<String, String> getFormData() {
-        StringTokenizer tokenizer = new StringTokenizer(payload);
+    public Map<String, String> getFormData() throws UnsupportedEncodingException {
+        StringTokenizer tokenizer = new StringTokenizer(payload, "&");
         Map<String, String> map = new HashMap<>();
         while (tokenizer.hasMoreTokens()) {
-            map.put(tokenizer.nextToken(), tokenizer.nextToken());
+            String[] split = tokenizer.nextToken().split("=");
+            map.put(split[0], URLDecoder.decode(split[1], "utf-8"));
         }
-
+        System.out.println(map);
         return map;
     }
 

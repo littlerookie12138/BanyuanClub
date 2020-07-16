@@ -1,4 +1,1 @@
-{
-  "userName": 张三,
-  "passWord": 123
-}
+[{"id":1,"pwd":"123","pwdConfirm":"213","userName":"王五","userTypeStr":"经理"},{"id":2,"pwd":"123","pwdConfirm":"123","userName":"张三","userTypeStr":"0"}]
