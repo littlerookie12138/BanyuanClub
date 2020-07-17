@@ -77,6 +77,7 @@ public class SocketServer extends Thread {
             if (mbmRequest == null) {
                 return;
             }
+            Map<String, String> receiveMsg = mbmRequest.getFormData();
 
             String path = mbmRequest.getPath();
             // 从这里搞到此次请求的路径
@@ -84,13 +85,12 @@ public class SocketServer extends Thread {
             if ("/".equals(path)) {
                 responseHtml("/login.html", dataOutputStream);
             } else if (path.contains(".html")) {
-                responseHtml(path, dataOutputStream, false);
+                responseHtml(path, dataOutputStream, checkUser(receiveMsg));
             } else if (path.contains("/css") || path.contains("/images") || path.contains("/js")) {
                 responseFile(dataOutputStream, path);
             } else {
                 switch (path) {
                     case "/server/login":
-                        Map<String, String> receiveMsg = mbmRequest.getFormData();
                         if (checkUser(receiveMsg)) {
                             responseRedirect("/bill_list.html", dataOutputStream);
                         } else {
@@ -160,8 +160,11 @@ public class SocketServer extends Thread {
             user.setId(maxId + 1);
             user.setUserName(formData.get("userName"));
             user.setPwd(formData.get("pwd"));
-
-            user.setUserTypeStr(formData.get("userType"));
+            if (formData.get("userType").equals("1")) {
+                user.setUserTypeStr("经理");
+            } else {
+                user.setUserTypeStr("普通员工");
+            }
             user.setPwdConfirm(formData.get("pwdConfirm"));
 
             synchronized (userList) {
