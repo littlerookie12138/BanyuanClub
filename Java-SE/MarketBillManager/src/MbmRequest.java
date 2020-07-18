@@ -55,11 +55,19 @@ public class MbmRequest {
         StringTokenizer tokenizer = new StringTokenizer(payload, "&");
         Map<String, String> map = new HashMap<>();
         while (tokenizer.hasMoreTokens()) {
-            String[] split = tokenizer.nextToken().split("=");
+            String[] split = processStr(tokenizer.nextToken()).split("[:=]");
             map.put(split[0], URLDecoder.decode(split[1], "utf-8"));
         }
         System.out.println(map);
         return map;
+    }
+
+    public static String processStr(String target) {
+        target = target.replace("{", "");
+        target = target.replace("}", "");
+        target = target.replace("\"", "");
+
+        return target;
     }
 
     @Override

@@ -1,9 +1,32 @@
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
 public class User {
     private int id;
     private String userName;
     private String pwd;
     private String pwdConfirm;
     private String userType;
+
+    public static List<User> search(User user) {
+        if (user == null || user.getUserName().trim().length() == 0) {
+            return null;
+        }
+
+        List<User> collect = SocketServer.getUserList().stream().filter(new Predicate<User>() {
+            @Override
+            public boolean test(User u) {
+                return u.getUserName().contains(user.getUserName().trim());
+            }
+        }).collect(Collectors.toList());
+
+        return collect;
+    }
+
+    public User(String userName) {
+        this.userName = userName;
+    }
 
     public String getUserType() {
         return userType;

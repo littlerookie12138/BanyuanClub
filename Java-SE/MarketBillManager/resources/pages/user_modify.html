@@ -76,7 +76,7 @@
         type: "post",
         contentType: "application/json;charset=UTF-8",
         url: "server/user/get",
-        data: JSON.stringify({"id": id}),
+        data: JSON.stringify({"id" : id}),
         success: function (result) {
           if (!$.isEmptyObject(result)) {
             $("#flag").val(id);
