@@ -3,6 +3,7 @@ import com.alibaba.fastjson.JSONObject;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.function.Predicate;
 
@@ -28,10 +29,10 @@ public class SocketServer extends Thread {
         checkFileExist(userFile);
         checkFileExist(providerFile);
 
-
-        try (InputStream userInputStream = new FileInputStream(userFile);
-             InputStream providerInputStream = new FileInputStream(providerFile);
+        try (FileInputStream userInputStream = new FileInputStream(userFile);
+             FileInputStream providerInputStream = new FileInputStream(providerFile);
         ) {
+
             byte[] bytes = userInputStream.readAllBytes();
             byte[] providerBytes = providerInputStream.readAllBytes();
 
@@ -133,9 +134,15 @@ public class SocketServer extends Thread {
                         }
                         break;
                     case "/server/user/list":
-                        if (mbmRequest.getFormData().get("flag").equals("search")) {
-                            responseJson(User.search(new User(mbmRequest.getFormData().get("name"))));
-                            break;
+                        if (mbmRequest.getPayload() != null) {
+                            if (mbmRequest.getFormData().get("flag").equals("search")) {
+                                if (!mbmRequest.getFormData().get("name").equals("")) {
+                                    responseJson(User.search(new User(mbmRequest.getFormData().get("name"))));
+                                } else {
+                                    responseJson(userList);
+                                }
+                                break;
+                            }
                         }
                         responseJson(userList);
                         break;
@@ -157,6 +164,16 @@ public class SocketServer extends Thread {
                     }
                     break;
                     case "/server/provider/list": {
+                        if (mbmRequest.getPayload() != null) {
+                            if (mbmRequest.getFormData().get("flag").equals("search")) {
+                                if (!mbmRequest.getFormData().get("name").equals("") || !mbmRequest.getFormData().get("desc").equals("")) {
+                                    responseJson(Provider.search(new Provider(mbmRequest.getFormData().get("name"), mbmRequest.getFormData().get("desc"))));
+                                } else {
+                                    responseJson(providerList);
+                                }
+                                break;
+                            }
+                        }
                         responseJson(providerList);
                     }
                     break;
@@ -178,6 +195,11 @@ public class SocketServer extends Thread {
                         Provider provider = findProvider(payload);
                         responseJson(provider);
                     }
+                    break;
+                    case "/server/bill/list": {
+
+                    }
+                    break;
                 }
             }
         } catch (IOException e) {
@@ -220,6 +242,33 @@ public class SocketServer extends Thread {
         int maxID = 0;
         Map<String, String> formData = mbmRequest.getFormData();
 
+        // 判断本次操作是否为修改操作
+        for (Provider provider : providerList) {
+            if (provider.getId() == Integer.parseInt(formData.get("id"))) {
+                // 说明本次操作是修改
+                Optional<Provider> id = providerList.stream().filter(new Predicate<Provider>() {
+                    @Override
+                    public boolean test(Provider provider) {
+                        try {
+                            return provider.getId() == Integer.parseInt(mbmRequest.getFormData().get("id"));
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        }
+                        return false;
+                    }
+                }).findFirst();
+
+                if (id.isPresent()) {
+                    id.get().setName(formData.get("name"));
+                    id.get().setContactPerson(formData.get("contactPerson"));
+                    id.get().setDesc(formData.get("desc"));
+                    id.get().setPhone(formData.get("phone"));
+                }
+                store();
+                return id.get();
+            }
+        }
+
         // 包含供应商信息
         Provider provider = new Provider();
         if (providerList.isEmpty()) {
@@ -236,29 +285,7 @@ public class SocketServer extends Thread {
             return provider;
         }
 
-        if (formData.get("id").equals("1")) {
-            // 说明本次操作是修改
-            Optional<Provider> id = providerList.stream().filter(new Predicate<Provider>() {
-                @Override
-                public boolean test(Provider provider) {
-                    try {
-                        return provider.getId() == Integer.parseInt(mbmRequest.getFormData().get("id"));
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
-                    return false;
-                }
-            }).findFirst();
 
-            if (id.isPresent()) {
-                id.get().setName(formData.get("name"));
-                id.get().setContactPerson(formData.get("contactPerson"));
-                id.get().setDesc(formData.get("desc"));
-                id.get().setPhone(formData.get("phone"));
-            }
-            store();
-            return id.get();
-        }
 
         Optional<Provider> max = providerList.stream().max(Comparator.comparing(Provider::getId));
         if (max.isPresent()) {

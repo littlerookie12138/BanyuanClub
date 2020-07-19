@@ -52,13 +52,17 @@ public class MbmRequest {
     }
 
     public Map<String, String> getFormData() throws UnsupportedEncodingException {
-        StringTokenizer tokenizer = new StringTokenizer(payload, "&");
+        StringTokenizer tokenizer = new StringTokenizer(payload, "&,");
         Map<String, String> map = new HashMap<>();
         while (tokenizer.hasMoreTokens()) {
             String[] split = processStr(tokenizer.nextToken()).split("[:=]");
-            map.put(split[0], URLDecoder.decode(split[1], "utf-8"));
+            if (split.length == 1) {
+                map.put(split[0], "");
+            } else {
+                map.put(split[0], URLDecoder.decode(split[1], "utf-8"));
+            }
         }
-        System.out.println(map);
+
         return map;
     }
 
