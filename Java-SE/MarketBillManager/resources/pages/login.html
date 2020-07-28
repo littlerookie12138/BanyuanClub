@@ -6,7 +6,6 @@
   <link type="text/css" rel="stylesheet" href="css/style.css"/>
   <link rel="icon" href="data:image/ico;base64,aWNv">
 </head>
-
 <body class="blue-style">
 <div id="login">
   <div class="icon"></div>
@@ -15,7 +14,7 @@
       <dl>
         <dt>用户名：</dt>
         <dd><label>
-          <input type="text" name="userName" class="input-text"/>
+          <input type="text" name="userName" class="input-text" id = "input-name"/>
         </label></dd>
         <dt>密　码：</dt>
         <dd><label>
@@ -23,12 +22,18 @@
         </label></dd>
       </dl>
       <div class="buttons">
-
-        <input type="submit" value="登录系统" class="input-button"/>
-        <input type="reset" value="重　　填" class="input-button"/>
+        <input type="submit" value="登录系统" class="input-button" onclick="setCookies()"/>
+        <input type="reset" value="重　　填" class="input-button" onclick="window.location='/'"/>
       </div>
     </form>
   </div>
 </div>
 </body>
+<script>
+  function setCookies() {
+    var name = document.getElementById('input-name').value;
+    document.cookie = "userName=" + name;
+    console.log(document);
+  }
+</script>
 </html>

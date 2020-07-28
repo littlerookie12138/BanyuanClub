@@ -1,3 +1,5 @@
+package database.system;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -59,7 +61,7 @@ public class MbmRequest {
             if (split.length == 1) {
                 map.put(split[0], "");
             } else {
-                map.put(split[0], URLDecoder.decode(split[1], "utf-8"));
+                map.put(split[0], URLDecoder.decode(split[1], "utf-8").trim());
             }
         }
 
@@ -76,7 +78,7 @@ public class MbmRequest {
 
     @Override
     public String toString() {
-        return "MbmRequest{" +
+        return "database.system.MbmRequest{" +
                 "method='" + method + '\'' +
                 ", path='" + path + '\'' +
                 ", host='" + host + '\'' +

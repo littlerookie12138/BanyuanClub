@@ -1,1 +1,1 @@
-[{"id":1,"pwd":"123","pwdConfirm":"123","userName":"张三","userType":"1","userTypeStr":"经理"},{"id":2,"pwd":"123","pwdConfirm":"123","userName":"王五","userType":"0","userTypeStr":"普通员工"}]
+[{"id":1,"pwd":"1234","pwdConfirm":"1234","userName":"张三","userType":"1","userTypeStr":"经理"},{"id":2,"pwd":"1234","pwdConfirm":"1234","userName":"王五","userType":"0","userTypeStr":"普通员工"},{"id":3,"pwd":"123456","pwdConfirm":"123456","userName":"王也","userType":"0","userTypeStr":"普通员工"}]

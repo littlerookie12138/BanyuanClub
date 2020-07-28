@@ -1,5 +1,8 @@
+package database.systemRefine;
+
+import Check.CheckPwd;
+
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class User {
@@ -14,14 +17,27 @@ public class User {
             return null;
         }
 
-        List<User> collect = SocketServer.getUserList().stream().filter(new Predicate<User>() {
-            @Override
-            public boolean test(User u) {
-                return u.getUserName().contains(user.getUserName().trim());
-            }
-        }).collect(Collectors.toList());
+        List<User> collect = SocketServer.getUserList().stream().filter(u -> u.getUserName().contains(user.getUserName().trim())).collect(Collectors.toList());
 
         return collect;
+    }
+
+    public static boolean check(User user) {
+        // 检测用户输入是否有空值
+        if (user.getUserName().equals("") || user.getPwd().equals("") || user.getPwdConfirm().equals("")) {
+            return false;
+        }
+
+        // 检测两次密码输入是否一致
+        if (!user.getPwd().equals(user.pwdConfirm)) {
+            return false;
+        }
+
+        if (!CheckPwd.check(user.getPwd()) || !CheckPwd.check(user.getPwdConfirm())) {
+            return false;
+        }
+
+        return true;
     }
 
     public User(String userName) {
@@ -95,7 +111,7 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
+        return "database.system.User{" +
                 "id=" + id +
                 ", userName='" + userName + '\'' +
                 ", pwd='" + pwd + '\'' +

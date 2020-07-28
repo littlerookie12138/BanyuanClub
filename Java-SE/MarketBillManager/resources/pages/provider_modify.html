@@ -6,9 +6,10 @@
   <link type="text/css" rel="stylesheet" href="css/style.css"/>
   <link rel="icon" href="data:image/ico;base64,aWNv">
 </head>
+<body onload="getCookie()">
 <div id="header">
   <div class="title"></div>
-  <div class="welcome">欢迎您：admin</div>
+  <div id="welcome" style="font-size: 30px; padding-top: 40px; color: white">欢迎您：admin</div>
 </div>
 <div id="section-left">
   <ul class="left-menu">
@@ -61,10 +62,23 @@
     </form>
   </div>
 </div>
+</body>
+
 
 <script src="js/jquery-3.5.1.min.js"></script>
 <script src="js/common.js"></script>
 <script>
+  function getCookie() {
+    var name = "";
+    var strings = document.cookie.split('=');
+    console.log(document);
+
+    name = strings[1];
+    document.getElementById("welcome").innerText = "欢迎您:" + name;
+    console.log(strings);
+    return name;
+  }
+
   $(function () {
     let id = getURLParameter("id");
     if (id !== undefined && id.length !== 0) {
