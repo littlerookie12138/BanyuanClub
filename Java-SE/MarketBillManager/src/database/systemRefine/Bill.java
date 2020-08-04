@@ -1,8 +1,13 @@
 package database.systemRefine;
 
+import com.alibaba.fastjson.JSON;
+import database.jdbc.BillService;
+import database.jdbc.ProviderService;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 public class Bill {
     private int id;
@@ -14,23 +19,15 @@ public class Bill {
     private String isPayStr;
     private String providerName;
 
-    public static List<Bill> search(Bill bill) {
+    public static List<Bill> search(Bill bill) throws SQLException {
         if (bill == null || (bill.getProduct().trim().length() == 0 && bill.getIsPay() == -1)) {
             return null;
         }
 
-        List<Bill> collect = SocketServer.getBillList().stream().filter(new Predicate<Bill>() {
-            @Override
-            public boolean test(Bill u) {
-                if (bill.getProduct().trim().length() == 0 && bill.getIsPay() != -1) {
-                    return u.getIsPay() == bill.getIsPay();
-                } else if (bill.getProduct().trim().length() != 0 && bill.getIsPay() == -1) {
-                    return u.getProduct().contains(bill.getProduct().trim());
-                }
-
-                return u.getProduct().contains(bill.getProduct().trim()) && u.getIsPay() == bill.getIsPay();
-            }
-        }).collect(Collectors.toList());
+        List<Bill> collect = new ArrayList<>();
+        for (Map<String, Object> allBill : BillService.getAllBills()) {
+            collect.add(JSON.parseObject(JSON.toJSONString(allBill), Bill.class));
+        }
 
         return collect;
     }
@@ -114,6 +111,11 @@ public class Bill {
         this.money = money;
     }
 
+    public Provider getProviderById() {
+        Provider temp = new Provider();
+        temp.setId(Integer.parseInt(providerId));
+        return JSON.parseObject(JSON.toJSONString(ProviderService.getProviderById(temp)), Provider.class);
+    }
     public String getProviderId() {
         return providerId;
     }
@@ -132,7 +134,7 @@ public class Bill {
 
     @Override
     public String toString() {
-        return "database.system.Bill{" +
+        return "database.systemRefine.Bill{" +
                 "id=" + id +
                 ", product='" + product + '\'' +
                 ", providerId='" + providerId + '\'' +

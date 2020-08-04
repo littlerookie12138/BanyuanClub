@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <style>
+        body{
+            position: relative;
+        }
+        #parent{
+            position: absolute;
+            width: 700px;
+            left: 500px;
+        }
+
+        #parent #title{
+            font-size: 25px;
+            color: deepskyblue;
+        }
+
+        #parent input{
+            border-radius: 22px;
+            height: 25px;
+            margin: 5px 20px;
+        }
+
+        #parent #son{
+            position: relative;
+            width: 400px;
+            left: 50px;
+            margin: 0px;
+        }
+
+        span{
+            width: 200px;
+        }
+
+        #parent #checkID img{
+            position: absolute;
+            top: 338px;
+        }
+
+        #parent #checkID a{
+            float: right;
+            margin-top: 12px;
+        }
+
+        #parent #agree span{
+            position: absolute;
+            bottom: 42px;
+            left: 38px;
+        }
+        #register .register{
+            width: 150px;
+            margin-left: 50px;
+            background-color: skyblue;
+        }
+    </style>
+</head>
+<body>
+    <div id="parent">
+        <div id="title">
+            <p>用户注册</p>
+        </div>
+        <div id="son">
+            <div id="username">
+                <span>*用户名</span>&nbsp;&nbsp;
+                <input type="text" required/><br/>
+                <span style="font-size: 10px; color: red">用户名要求不低于6个字符</span>
+            </div>
+            <div id="pwd">
+                <span>*密码</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="password" required/><br/>
+                <span style="font-size: 10px; color: red">密码要求不少于6个字符</span>
+            </div>
+            <div id="idNum">
+                <span>*身份证号</span>
+                <input type="text" required/><br/>
+                <span style="font-size: 10px; color: red">身份证号必填</span>
+            </div>
+            <div id="phone">
+                <span>*电话号码</span>
+                <input type="text" required/><br/>
+                <span style="font-size: 10px; color: red">电话号码必填</span>
+            </div>
+            <div id="address" style="height: 40px">
+                <span>*地址</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="text">
+            </div>
+            <div id="postCode" style="height: 40px">
+                <span>*邮政编码</span>
+                <input type="text"/>
+            </div>
+            <div id="checkID" style="height: 40px">
+                <span>*验证码</span>
+                <input type="text"/>
+                <img src="../images/img2.jpg" alt="验证码"/>
+                <a href="">看不清</a>
+            </div>
+            <div id="agree">
+                <input type="checkbox"/><span>我同意<a href="" style="color: deepskyblue">《服务条款》</a></span>
+            </div>
+            <div id="register">
+                <input type="button" value="立即注册" class="register"/>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

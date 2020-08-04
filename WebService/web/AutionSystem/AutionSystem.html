@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AutionSystem</title>
+    <style>
+        #parent{
+            margin-left: 200px;
+        }
+
+        #title{
+            width: 1000px;
+            position: relative;
+        }
+
+        #title h1{
+            width: 200px;
+            margin: 0px;
+        }
+
+        #title .logout{
+            position: absolute;
+            right: 1px;
+            top: 10px;
+            width: 100px;
+            height: 30px;
+        }
+
+        #search div{
+            float: left;
+            margin: 0px 10px 0px;
+            padding: 0px;
+        }
+
+        #search div input{
+            width: 105px;
+        }
+
+        #searchThing{
+            background-color: deepskyblue;
+        }
+
+        #tableShow table{
+            border-collapse: collapse;
+            width: 1000px;
+            text-align: center;
+            margin-top: 5px;
+        }
+
+        #tableShow table tr:nth-child(odd){
+            background-color: aquamarine;
+        }
+
+        #tableShow table th{
+            border: 1px solid black;
+        }
+
+        #tableShow table td{
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <div id="parent">
+        <div id="title">
+            <h1>在线拍卖系统</h1>
+            <input type="button" class="logout" value="注销">
+            <hr/>
+        </div>
+        <div id="search">
+            <div>
+                <span>名称:</span>
+                <input type="text">
+            </div>
+            <div>
+                <span>描述:</span>
+                <input type="text">
+            </div>
+            <div>
+                <span>开始时间:</span>
+                <input type="text">
+            </div>
+            <div>
+                <span>结束时间:</span>
+                <input type="text">
+            </div>
+            <div>
+                <span>起拍价:</span>
+                <input type="text">
+            </div>
+            <input type="button" id="searchThing" value="查询">
+        </div>
+        <div id="tableShow">
+            <table>
+                <tr>
+                    <th>名称</th>
+                    <th>描述</th>
+                    <th>开始时间</th>
+                    <th>结束时间</th>
+                    <th>起拍价</th>
+                    <th>操作</th>
+                </tr>
+                <tr>
+                    <td>国书</td>
+                    <td>冥国藏书</td>
+                    <td>2020年08月04日20:44:38</td>
+                    <td>2020-08-04 20:44:42</td>
+                    <td>2000</td>
+                    <td>竞拍</td>
+                </tr>
+                <tr>
+                    <td>国书</td>
+                    <td>冥国藏书</td>
+                    <td>2020年08月04日20:44:38</td>
+                    <td>2020-08-04 20:44:42</td>
+                    <td>2000</td>
+                    <td>竞拍</td>
+                </tr>
+                <tr>
+                    <td>国书</td>
+                    <td>冥国藏书</td>
+                    <td>2020年08月04日20:44:38</td>
+                    <td>2020-08-04 20:44:42</td>
+                    <td>2000</td>
+                    <td>竞拍</td>
+                </tr>
+                <tr>
+                    <td>国书</td>
+                    <td>冥国藏书</td>
+                    <td>2020年08月04日20:44:38</td>
+                    <td>2020-08-04 20:44:42</td>
+                    <td>2000</td>
+                    <td>竞拍</td>
+                </tr>
+                <tr>
+                    <td>国书</td>
+                    <td>冥国藏书</td>
+                    <td>2020年08月04日20:44:38</td>
+                    <td>2020-08-04 20:44:42</td>
+                    <td>2000</td>
+                    <td>竞拍</td>
+                </tr>
+                <tr>
+                    <td>国书</td>
+                    <td>冥国藏书</td>
+                    <td>2020年08月04日20:44:38</td>
+                    <td>2020-08-04 20:44:42</td>
+                    <td>2000</td>
+                    <td>竞拍</td>
+                </tr>
+                <tr>
+                    <td colspan="6"><pre>首页 上一页 <span style="color: red">前五页</span> 1 2 3 4 5 6 下一页 尾页</pre></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+</body>
+</html>

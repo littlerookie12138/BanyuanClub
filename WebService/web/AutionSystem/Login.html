@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <style>
+        #parent{
+            width: 1200px;
+            height: 400px;
+            position: relative;
+            background-color: whitesmoke;
+            left: 100px;
+            font-size: 13px;
+        }
+
+        #parent #left{
+            width: 445px;
+            height: 320px;
+            margin: 0px;
+            position: absolute;
+            left: 200px;
+            top: 50px;
+        }
+
+        #parent #right{
+            width: 400px;
+            height: 320px;
+            right: 50px;
+            top: 80px;
+            position: absolute;
+            float: right;
+        }
+
+        #parent #right #login {
+            color: deepskyblue;
+            font-size: 15px;
+        }
+
+        #parent #right .button{
+            width: 50px;
+            background-color: skyblue;
+            border: 1px solid black;
+        }
+
+        #parent #right input{
+            height: 27px;
+            border: 1px solid black;
+            border-radius: 11px;
+            margin: 5px;
+        }
+
+        #parent #right #ver{
+            position: relative;
+        }
+
+        #parent #right #ver img{
+            position: absolute;
+            top: 7px;
+        }
+
+        #parent #right #ver a{
+            position: absolute;
+            left: 320px;
+            top: 13px;
+        }
+
+        #parent #right #checkbox{
+            color: black;
+            font-size: 10px;
+            position: relative;
+            margin: 0px;
+        }
+
+        #parent #right #prompt{
+            position: absolute;
+            top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="parent">
+        <div id="left">
+            <img src="../images/img1.jpg" alt="登录页面图片">
+        </div>
+        <div id="right">
+            <span id="login">用户登录</span><br/>
+            <div>用户名：<input type="text" value="" placeholder="常用邮箱"/><br/></div>
+            <div>密&nbsp;&nbsp;码：<input type="password" value="" placeholder="密码"/><br/></div>
+            <div id="ver">验证码：<input type="text" value="" placeholder="验证码"/><img src="../images/img2.jpg" alt="验证码"><a href="">看不清</a><br/></div>
+
+            <div id="checkbox"><input type="checkbox" value="下次自动登录"/><span id="prompt">下次自动登录</span><br/></div>
+            <input type="button" value="登录" class="button">
+            <input type="button" value="注册" class="button">
+            <a href="">忘记密码</a>
+        </div>
+    </div>
+</body>
+</html>

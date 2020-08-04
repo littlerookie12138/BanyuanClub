@@ -1,10 +1,14 @@
 package database.systemRefine;
 
 import Check.CheckPhone;
+import com.alibaba.fastjson.JSON;
+import database.jdbc.ProviderService;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class Provider {
     private int id;
@@ -13,25 +17,21 @@ public class Provider {
     private String contactPerson;
     private String phone;
 
-    public static List<Provider> search(Provider provider) {
+    public static List<Provider> search(Provider provider) throws SQLException {
         if (provider == null || (provider.getName().trim().length() == 0 && provider.getDesc().trim().length() == 0)) {
             return null;
         }
 
-        List<Provider> collect = SocketServer.getProviderList().stream().filter(u -> {
-            if (!provider.getName().trim().equals("") && provider.getDesc().trim().equals("")) {
-                return u.getName().contains(provider.getName().trim());
-            } else if (provider.getName().trim().equals("") && !provider.getDesc().trim().equals("")) {
-                return u.getDesc().contains(provider.getDesc().trim());
-            }
-            return u.getName().contains(provider.getName().trim()) || u.getDesc().contains(provider.getDesc().trim());
-        }).collect(Collectors.toList());
+        List<Provider> collect = new ArrayList<>();
+        for (Map<String, Object> objectMap : ProviderService.fuzzyQuery(provider)) {
+            collect.add(JSON.parseObject(JSON.toJSONString(objectMap), Provider.class));
+        }
 
         return collect;
 
     }
 
-    public static boolean check(Provider provider) {
+    public static boolean check(Provider provider) throws SQLException {
         if (provider.getPhone().trim().length() == 0 || provider.getName().trim().length() == 0 || provider.getContactPerson().trim().length() == 0 || provider.getDesc().trim().length() == 0) {
             return false;
         }
@@ -39,6 +39,14 @@ public class Provider {
         if (!CheckPhone.check(provider.getPhone())) {
             return false;
         }
+
+        for (Map<String, Object> temp : ProviderService.getAllProviders()) {
+            if (!provider.getName().equals(temp.get("name"))) {
+                // 供应商姓名重复
+                return false;
+            }
+        }
+
 
         return true;
     }

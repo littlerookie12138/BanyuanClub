@@ -1,9 +1,13 @@
 package database.systemRefine;
 
 import Check.CheckPwd;
+import com.alibaba.fastjson.JSON;
+import database.jdbc.UserService;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 public class User {
     private int id;
@@ -12,12 +16,14 @@ public class User {
     private String pwdConfirm;
     private String userType;
 
-    public static List<User> search(User user) {
+    public static List<User> search(User user) throws SQLException {
         if (user == null || user.getUserName().trim().length() == 0) {
             return null;
         }
-
-        List<User> collect = SocketServer.getUserList().stream().filter(u -> u.getUserName().contains(user.getUserName().trim())).collect(Collectors.toList());
+        List<User> collect = new ArrayList<>();
+        for (Map<String, Object> objectMap : UserService.fuzzyQuery(user)) {
+            collect.add(JSON.parseObject(JSON.toJSONString(objectMap), User.class));
+        }
 
         return collect;
     }

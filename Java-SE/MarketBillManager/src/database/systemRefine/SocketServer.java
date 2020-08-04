@@ -1,92 +1,38 @@
+package database.systemRefine;
+
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import database.jdbc.BillService;
+import database.jdbc.JDBCUtil;
+import database.jdbc.ProviderService;
+import database.jdbc.UserService;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.file.Files;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.function.Predicate;
 
 public class SocketServer extends Thread {
     private static List<User> userList = new ArrayList();
     private static List<Provider> providerList = new ArrayList();
+    private static List<Bill> billList = new ArrayList();
+
     private Socket socket;
-    private static final String USERPATH = PropUtil.getProp("user.store.path");
-    private static final String PROVIDERPATH = PropUtil.getProp("provider.store.path");
     private static MbmRequest mbmRequest;
 
     static {
-        try {
-            load();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        JDBCUtil jdbcUtil = new JDBCUtil();
     }
 
-    public static void load() throws IOException {
-        File userFile = new File(USERPATH);
-        File providerFile = new File(PROVIDERPATH);
-        checkFileExist(userFile);
-        checkFileExist(providerFile);
-
-        try (FileInputStream userInputStream = new FileInputStream(userFile);
-             FileInputStream providerInputStream = new FileInputStream(providerFile);
-        ) {
-
-            byte[] bytes = userInputStream.readAllBytes();
-            byte[] providerBytes = providerInputStream.readAllBytes();
-
-            String jsonString = new String(bytes);
-            String providerJsonString = new String(providerBytes);
-            userList = JSONObject.parseArray(jsonString, User.class);
-            providerList = JSONObject.parseArray(providerJsonString, Provider.class);
-
-            if (userList == null) {
-                userList = new ArrayList<>();
-            }
-
-            if (providerList == null) {
-                providerList = new ArrayList<>();
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static void checkFileExist(File userFile) throws IOException {
-        if (!userFile.exists()) {
-            if (!userFile.getParentFile().exists()) {
-                userFile.getParentFile().mkdirs();
-                userFile.createNewFile();
-            } else if (!userFile.getParentFile().isDirectory()) {
-                throw new FileNotFoundException("文件夹不存在");
-            } else {
-                userFile.createNewFile();
-            }
-        }
-    }
-
-    private static void store() throws IOException {
-        File file = new File(USERPATH);
-        File providerFile = new File(PROVIDERPATH);
-        checkFileExist(file);
-        checkFileExist(providerFile);
-
-        try {
-            OutputStream outputStream = new FileOutputStream(file);
-            OutputStream providerOutputStream = new FileOutputStream(providerFile);
-            String jsonString = JSONObject.toJSONString(userList);
-            String providerJsonString = JSONObject.toJSONString(providerList);
-            outputStream.write(jsonString.getBytes());
-            providerOutputStream.write(providerJsonString.getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    // 加锁对象
+    private static char[] arg;
 
     public SocketServer(Socket socket) {
         this.socket = socket;
     }
+
 
     @Override
     public void run() {
@@ -116,7 +62,10 @@ public class SocketServer extends Thread {
                 responseHtml("/login.html", dataOutputStream);
             } else if (path.contains(".html")) {
                 // 如果路径中包含.html，说明请求到html文件
-                if (path.contains("login")) {
+                if (path.contains("logout")) {
+                    // 退出程序
+                    responseHtml("/login.html", dataOutputStream);
+                } else if (path.contains("login")) {
                     // 请求这个页面说明登录失败
                     responseHtml(path, dataOutputStream, false);
                 } else {
@@ -137,24 +86,32 @@ public class SocketServer extends Thread {
                         if (mbmRequest.getPayload() != null) {
                             if (mbmRequest.getFormData().get("flag").equals("search")) {
                                 if (!mbmRequest.getFormData().get("name").equals("")) {
-                                    responseJson(User.search(new User(mbmRequest.getFormData().get("name"))));
+                                    synchronized (arg) {
+                                        responseJson(User.search(new User(mbmRequest.getFormData().get("name"))));
+                                    }
                                 } else {
-                                    responseJson(userList);
+                                    responseRedirect("/server/user/list", dataOutputStream);
                                 }
                                 break;
                             }
                         }
-                        responseJson(userList);
+                        synchronized (arg){
+                            List<User> temp = new ArrayList<>();
+                            for (Map<String, Object> user : UserService.getAllUsers()) {
+                                temp.add(JSON.parseObject(JSON.toJSONString(user), User.class));
+                            }
+                            responseJson(temp);
+                        }
                         break;
                     case "/server/user/modify":
-                        if (addUser() == null) {
+                        if (add() == null) {
                             responseRedirect("/modify_failed.html", dataOutputStream);
                         } else {
                             responseRedirect("/user_list.html", dataOutputStream);
                         }
                         break;
                     case "/server/user/delete":
-                        deleteUser();
+                        delete();
                         responseRedirect("/user_list.html", dataOutputStream);
                         break;
                     case "/server/user/get": {
@@ -169,40 +126,81 @@ public class SocketServer extends Thread {
                                 if (!mbmRequest.getFormData().get("name").equals("") || !mbmRequest.getFormData().get("desc").equals("")) {
                                     responseJson(Provider.search(new Provider(mbmRequest.getFormData().get("name"), mbmRequest.getFormData().get("desc"))));
                                 } else {
-                                    responseJson(providerList);
+                                    responseRedirect("/server/provider/list", dataOutputStream);
                                 }
                                 break;
                             }
                         }
-                        responseJson(providerList);
+                        List<Provider> tempProvider = new ArrayList<>();
+                        for (Map<String, Object> provider : ProviderService.getAllProviders()) {
+                            tempProvider.add(JSON.parseObject(JSON.toJSONString(provider), Provider.class));
+                        }
+                        responseJson(tempProvider);
                     }
                     break;
                     case "/server/provider/modify": {
                         if (add() == null) {
-                            responseRedirect("/modify_failed.html", dataOutputStream);
+                            responseRedirect("/providerModify_failed.html", dataOutputStream);
                         } else {
                             responseRedirect("/provider_list.html", dataOutputStream);
                         }
                     }
                     break;
                     case "/server/provider/delete": {
-                        deleteProvider();
+                        delete();
                         responseRedirect("/provider_list.html", dataOutputStream);
                     }
                     break;
                     case "/server/provider/get": {
                         String payload = mbmRequest.getPayload();
-                        Provider provider = findProvider(payload);
+                        Provider provider = (Provider) find(payload);
                         responseJson(provider);
                     }
                     break;
                     case "/server/bill/list": {
+                        List<Bill> tempBill = new ArrayList<>();
+                        for (Map<String, Object> bill : BillService.getAllBills()) {
+                            tempBill.add(JSON.parseObject(JSON.toJSONString(bill), Bill.class));
+                        }
 
+                        responseJson(tempBill);
+                    }
+                    break;
+                    case "/server/bill/modify": {
+                        if (add() == null) {
+                            responseRedirect("/billModify_failed.html", dataOutputStream);
+                        } else {
+                            responseRedirect("/bill_list.html", dataOutputStream);
+                        }
+                    }
+                    break;
+                    case "/server/bill/get": {
+                        Bill findBill = (Bill) find(mbmRequest.getPayload());
+                        responseJson(findBill);
+                    }
+                    break;
+                    case "/server/bill/delete": {
+                        delete();
+                        responseRedirect("/bill_list.html", dataOutputStream);
+                    }
+                    break;
+                    case "/server/bill/search": {
+
+                        Bill tempBill = new Bill(receiveMsg.get("product"), Integer.valueOf(receiveMsg.get("isPay")));
+                        List<Bill> search = new ArrayList<>();
+                        for (Map<String, Object> map : BillService.fuzzyQuery(tempBill)) {
+                            search.add(JSON.parseObject(JSON.toJSONString(map), Bill.class));
+                        }
+                        if (search == null) {
+                            responseRedirect("server/bill/list", dataOutputStream);
+                        } else {
+                            responseJson(search);
+                        }
                     }
                     break;
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException | SQLException e) {
             e.printStackTrace();
         }
         try {
@@ -212,179 +210,226 @@ public class SocketServer extends Thread {
         }
     }
 
-    private Provider findProvider(String payload) {
+    private void delete() {
+        String payload = mbmRequest.getPayload();
+        String[] split = payload.split(":");
+        split[1] = split[1].replace("}", "");
+        split[1] = split[1].replace("\"", "");
+
+        if (mbmRequest.getPath().contains("provider")) {
+            try {
+                Provider provider = new Provider();
+                provider.setId(Integer.parseInt(split[1]));
+
+                synchronized (arg) {
+                    ProviderService.deleteProvider(provider);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return;
+        }
+
+        if (mbmRequest.getPath().contains("bill")) {
+            try {
+                Bill bill = new Bill();
+                bill.setId(Integer.parseInt(split[1]));
+                synchronized (arg) {
+                    BillService.deleteBill(bill);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return;
+        }
+
+        if (mbmRequest.getPath().contains("user")) {
+            try {
+                User user = new User();
+                user.setId(Integer.parseInt(split[1]));
+
+                synchronized (arg) {
+                    UserService.deleteUser(user);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private Object find(String payload) {
         payload = MbmRequest.processStr(payload);
         String[] split = payload.split(":|=");
 
-        Optional<Provider> first = providerList.stream().filter(provider -> provider.getId() == Integer.parseInt(split[1])).findFirst();
-        return first.orElse(null);
-//        List<User> collect = userList.stream().filter(user -> user.getId() == Integer.parseInt(split[1])).collect(Collectors.toList());
-    }
+        if (mbmRequest.getPath().contains("provider")) {
+            Provider provider = new Provider();
+            provider.setId(Integer.parseInt(split[1]));
 
-    private void deleteProvider() {
-        try {
-            String payload = mbmRequest.getPayload();
-            String[] split = payload.split(":");
-            split[1] = split[1].replace("}", "");
-            split[1] = split[1].replace("\"", "");
-
-            synchronized (providerList) {
-                providerList.removeIf(user -> user.getId() == Integer.parseInt(split[1]));
+            synchronized (arg) {
+                return JSON.parseObject(JSON.toJSONString(ProviderService.getProviderById(provider)), Provider.class);
             }
-
-            store();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+
+        if (mbmRequest.getPath().contains("bill")) {
+            Bill bill = new Bill();
+            bill.setId(Integer.parseInt(split[1]));
+
+            synchronized (arg) {
+                return JSON.parseObject(JSON.toJSONString(BillService.getBillById(bill)), Bill.class);
+            }
+        }
+
+        if (mbmRequest.getPath().contains("user")) {
+            User user = new User();
+            user.setId(Integer.parseInt(split[1]));
+
+            synchronized (arg) {
+                return JSON.parseObject(JSON.toJSONString(UserService.getUserById(user)), User.class);
+            }
+        }
+
+        return null;
     }
 
-    private Provider add() throws IOException {
+
+    private Object add() throws IOException, SQLException {
         int maxID = 0;
         Map<String, String> formData = mbmRequest.getFormData();
 
-        // 判断本次操作是否为修改操作
-        for (Provider provider : providerList) {
-            if (provider.getId() == Integer.parseInt(formData.get("id"))) {
-                // 说明本次操作是修改
-                Optional<Provider> id = providerList.stream().filter(new Predicate<Provider>() {
-                    @Override
-                    public boolean test(Provider provider) {
-                        try {
-                            return provider.getId() == Integer.parseInt(mbmRequest.getFormData().get("id"));
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-                        }
-                        return false;
-                    }
-                }).findFirst();
+        // 处理provider
+        if (mbmRequest.getPath().contains("provider")) {
+            if (formData.get("id").equals("0")) {
+                Provider provider = new Provider();
+                provider.setName(formData.get("name"));
+                provider.setContactPerson(formData.get("contactPerson"));
+                provider.setDesc(formData.get("desc"));
+                provider.setPhone(formData.get("phone"));
 
-                if (id.isPresent()) {
-                    id.get().setName(formData.get("name"));
-                    id.get().setContactPerson(formData.get("contactPerson"));
-                    id.get().setDesc(formData.get("desc"));
-                    id.get().setPhone(formData.get("phone"));
-                }
-                store();
-                return id.get();
-            }
-        }
-
-        // 包含供应商信息
-        Provider provider = new Provider();
-        if (providerList.isEmpty()) {
-            provider.setId(1);
-            provider.setName(formData.get("name"));
-            provider.setContactPerson(formData.get("contactPerson"));
-            provider.setDesc(formData.get("desc"));
-            provider.setPhone(formData.get("phone"));
-            synchronized (providerList) {
-                providerList.add(provider);
-            }
-
-            store();
-            return provider;
-        }
-
-
-
-        Optional<Provider> max = providerList.stream().max(Comparator.comparing(Provider::getId));
-        if (max.isPresent()) {
-            maxID = max.get().getId();
-        }
-
-        provider.setId(maxID + 1);
-        provider.setName(formData.get("name"));
-        provider.setContactPerson(formData.get("contactPerson"));
-        provider.setDesc(formData.get("desc"));
-        provider.setPhone(formData.get("phone"));
-        synchronized (providerList) {
-            providerList.add(provider);
-        }
-        store();
-
-        return provider;
-    }
-
-    private void deleteUser() {
-        try {
-            String payload = mbmRequest.getPayload();
-            String[] split = payload.split(":");
-            split[1] = split[1].replace("}", "");
-            split[1] = split[1].replace("\"", "");
-
-            userList.removeIf(user -> user.getId() == Integer.parseInt(split[1]));
-
-            store();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    public User addUser() {
-        try {
-            Map<String, String> formData = mbmRequest.getFormData();
-            boolean nameIsUsed = false;
-            boolean isChanged = false;
-            int maxId = 0;
-            User changedUser = null;
-
-            for (User user : userList) {
-                if (maxId < user.getId()) {
-                    maxId = user.getId();
-                }
-                if (user.getUserName().equals(formData.get("userName"))) {
-                    nameIsUsed = true;
-                }
-
-                if (user.getId() == Integer.parseInt(formData.get("id"))) {
-                    changedUser = user;
-                    isChanged = true;
-                }
-            }
-            if (!formData.get("pwd").equals(formData.get("pwdConfirm")) || nameIsUsed) {
-                // 用户名密码输入两次错误 或者 用户名被使用
-                if (!isChanged) {
+                if (!Provider.check(provider)) {
                     return null;
                 }
-            }
-            if (isChanged) {
-                // 证明本次操作是修改
-                changedUser.setUserName(formData.get("userName"));
-                changedUser.setPwd(formData.get("pwd"));
-                changedUser.setUserType(formData.get("userType"));
-                if (formData.get("userType").equals("1")) {
-                    changedUser.setUserTypeStr("经理");
-                } else {
-                    changedUser.setUserTypeStr("普通员工");
+
+                synchronized (arg) {
+                    ProviderService.addProvider(provider);
                 }
-                changedUser.setPwdConfirm(formData.get("pwdConfirm"));
-
-                store();
-                return changedUser;
+                return provider;
             }
-            User user = new User();
-            user.setId(maxId + 1);
-            user.setUserName(formData.get("userName"));
-            user.setUserType(formData.get("userType"));
-            user.setPwd(formData.get("pwd"));
+
+            Provider modify = new Provider();
+            modify.setId(Integer.parseInt(formData.get("id")));
+            modify.setContactPerson(formData.get("contactPerson"));
+            modify.setDesc(formData.get("desc"));
+            modify.setName(formData.get("name"));
+            modify.setPhone(formData.get("phone"));
+            if (!Provider.check(modify)) {
+                return null;
+            }
+
+            synchronized (arg) {
+                ProviderService.updateProvider(modify);
+            }
+            return modify;
+        }
+
+        // 处理账单
+        if (mbmRequest.getPath().contains("bill")) {
+            Date date = new Date();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            if (formData.get("id").equals("0")) {
+                Bill bill = new Bill();
+                if (formData.get("isPay").equals("1")) {
+                    bill.setIsPayStr("已付款");
+                } else if (formData.get("isPay").equals("0")) {
+                    bill.setIsPayStr("未付款");
+                }
+                bill.setIsPay(Integer.parseInt(formData.get("isPay")));
+                bill.setMoney(formData.get("money"));
+                bill.setProduct(formData.get("product"));
+                bill.setProviderId(formData.get("providerId"));
+                bill.setProviderName(formData.get("providerName"));
+                bill.setUpdateTime(simpleDateFormat.format(date));
+
+                if (!Bill.check(bill)) {
+                    return null;
+                }
+
+                synchronized (arg) {
+                    BillService.addBill(bill);
+                }
+                return bill;
+            }
+
+            Bill bill = JSON.parseObject(JSON.toJSONString(formData), Bill.class);
+            if (formData.get("isPay").equals("1")) {
+                bill.setIsPayStr("已付款");
+            } else if (formData.get("isPay").equals("0")) {
+                bill.setIsPayStr("未付款");
+            }
+            bill.setUpdateTime(simpleDateFormat.format(date));
+
+            if (!Bill.check(bill)) {
+                return null;
+            }
+
+            synchronized (arg) {
+                BillService.updateBill(bill);
+            }
+            return bill;
+        }
+
+        // 处理User
+        if (mbmRequest.getPath().contains("user")) {
+
+            // 如果传来id等于0，表示此次操作为新增
+            if (formData.get("id").equals("0")) {
+                User user = new User();
+                user.setUserName(formData.get("userName"));
+                user.setUserType(formData.get("userType"));
+                user.setPwd(formData.get("pwd"));
+                if (formData.get("userType").equals("1")) {
+                    user.setUserTypeStr("经理");
+                } else {
+                    user.setUserTypeStr("普通员工");
+                }
+                user.setPwdConfirm(formData.get("pwdConfirm"));
+                if (!User.check(user)) {
+                    return null;
+                }
+
+                synchronized (arg) {
+                    UserService.addUser(user);
+                }
+
+                return user;
+            }
+
+
+            User modify = new User();
+            modify.setId(Integer.parseInt(formData.get("id")));
+            modify.setUserName(formData.get("userName"));
+            modify.setPwd(formData.get("pwd"));
+            modify.setUserType(formData.get("userType"));
             if (formData.get("userType").equals("1")) {
-                user.setUserTypeStr("经理");
+                modify.setUserTypeStr("经理");
             } else {
-                user.setUserTypeStr("普通员工");
+                modify.setUserTypeStr("普通员工");
             }
-            user.setPwdConfirm(formData.get("pwdConfirm"));
+            modify.setPwdConfirm(formData.get("pwdConfirm"));
 
-            synchronized (userList) {
-                userList.add(user);
+            if (!User.check(modify)) {
+                return null;
             }
-            store();
-            return user;
-        } catch (IOException e) {
-            e.printStackTrace();
+
+            synchronized (arg) {
+                UserService.updateUser(modify);
+            }
+            return modify;
         }
         return null;
     }
+
 
     private void responseJson(Object object) throws IOException {
         String jsonString = JSONObject.toJSONString(object);
@@ -410,9 +455,16 @@ public class SocketServer extends Thread {
     }
 
 
-    private boolean checkUser(Map<String, String> map) {
-        for (User user : userList) {
-            if (user.getUserName().equals(map.get("userName")) && user.getPwd().equals(map.get("passWord"))) {
+    private boolean checkUser(Map<String, String> map) throws SQLException {
+        if (map == null) {
+            return false;
+        }
+        if (map.get("userName").equals("") || map.get("passWord").equals("")) {
+            return false;
+        }
+        for (Map<String, Object> allUser : UserService.getAllUsers()) {
+
+            if (allUser.get("userName").equals(map.get("userName")) && allUser.get("pwd").toString().equals(map.get("passWord"))) {
                 return true;
             }
         }
@@ -423,11 +475,12 @@ public class SocketServer extends Thread {
         // 传进来的id {id:x} 对其进行处理
         id = MbmRequest.processStr(id);
         String[] split = id.split(":|=");
+        User user = new User();
+        user.setId(Integer.parseInt(split[1]));
 
-//        List<User> collect = userList.stream().filter(user -> user.getId() == Integer.parseInt(split[1])).collect(Collectors.toList());
-        Optional<User> first = userList.stream().filter(user -> user.getId() == Integer.parseInt(split[1])).findFirst();
-
-        return first.orElse(null);
+//        List<database.system.User> collect = userList.stream().filter(user -> user.getId() == Integer.parseInt(split[1])).collect(Collectors.toList());
+//        Optional<User> first = userList.stream().filter(user -> user.getId() == Integer.parseInt(split[1])).findFirst();
+        return JSON.parseObject(JSON.toJSONString(UserService.getUserById(user)), User.class);
 
     }
 
@@ -554,8 +607,12 @@ public class SocketServer extends Thread {
         return providerList;
     }
 
+    public static List<Bill> getBillList() {
+        return billList;
+    }
+
     public static void main(String[] args) throws IOException {
-        ServerSocket serverSocket = new ServerSocket(5050);
+        ServerSocket serverSocket = new ServerSocket(5020);
         while (true) {
             Socket accept = serverSocket.accept();
             SocketServer socketServer = new SocketServer(accept);
