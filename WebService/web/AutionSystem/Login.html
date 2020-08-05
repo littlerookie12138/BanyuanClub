@@ -31,6 +31,12 @@
             float: right;
         }
 
+        /*#parent #right span{*/
+        /*    display: inline-block;*/
+        /*    text-align: right;*/
+        /*    width: 40px;*/
+        /*}*/
+
         #parent #right #login {
             color: deepskyblue;
             font-size: 15px;
@@ -84,9 +90,9 @@
         </div>
         <div id="right">
             <span id="login">用户登录</span><br/>
-            <div>用户名：<input type="text" value="" placeholder="常用邮箱"/><br/></div>
-            <div>密&nbsp;&nbsp;码：<input type="password" value="" placeholder="密码"/><br/></div>
-            <div id="ver">验证码：<input type="text" value="" placeholder="验证码"/><img src="../images/img2.jpg" alt="验证码"><a href="">看不清</a><br/></div>
+            <div><span>用户名：</span><input type="text" value="" placeholder="常用邮箱"/><br/></div>
+            <div><span>密码：</span><input type="password" value="" placeholder="密码"/><br/></div>
+            <div id="ver"><span>验证码：</span><input type="text" value="" placeholder="验证码"/><img src="../images/img2.jpg" alt="验证码"><a href="">看不清</a><br/></div>
 
             <div id="checkbox"><input type="checkbox" value="下次自动登录"/><span id="prompt">下次自动登录</span><br/></div>
             <input type="button" value="登录" class="button">

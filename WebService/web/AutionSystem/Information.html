@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Information</title>
+    <style>
+        #parent{
+            margin-left: 200px;
+        }
+
+        #title{
+            width: 1000px;
+            position: relative;
+        }
+
+        #title h1{
+            width: 200px;
+            margin: 0px;
+        }
+
+        #title .logout{
+            position: absolute;
+            right: 1px;
+            top: 10px;
+            width: 100px;
+            height: 30px;
+        }
+
+        #information #detail{
+            float: left;
+            border: 1px solid black;
+        }
+
+        #detail table{
+            border-collapse: collapse;
+            text-align: center;
+            width: 500px;
+            height: 180px;
+        }
+
+        #detail table tr{
+            border: 1px solid black;
+        }
+
+        #detail table td{
+            border: 1px solid black;
+        }
+
+        #information #img{
+            float: left;
+            margin-left: 227px;
+        }
+
+        #price{
+            border: 1px solid lightskyblue;
+            width: 1000px;
+            height: 80px;
+            margin-top: 15px;
+            float: left;
+        }
+
+        #price span{
+            display: inline-block;
+            width: 400px;
+            margin-top: 20px;
+            margin-left: 40px;
+        }
+
+        #price span .textT{
+            width: 200px;
+            height: 30px;
+            margin-left: 5px;
+            margin-right: 5px;
+            border: 1px solid deepskyblue;
+        }
+
+        #button2{
+            position: absolute;
+            left: 240px;
+            bottom: 120px;
+        }
+        #button2 input{
+            width: 80px;
+            height: 30px;
+            color: black;
+            margin-right: 10px;
+        }
+        #priceHistory{
+            float: left;
+            position: absolute;
+            bottom: -50px;
+        }
+
+        #priceHistory table{
+            border-collapse: collapse;
+            text-align: center;
+            width: 600px;
+        }
+
+        #priceHistory table tr:nth-child(odd){
+            background-color: lightskyblue;
+        }
+
+        #priceHistory table td{
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <div id="parent">
+        <div id="title">
+            <h1>在线拍卖系统</h1>
+            <input type="button" class="logout" value="注销">
+            <hr/>
+        </div>
+        <div id="information">
+
+            <!--信息展示-->
+            <div id="detail">
+                <table>
+                    <tr>
+                        <td>名称：</td>
+                        <td>花瓶</td>
+                    </tr>
+                    <tr>
+                        <td>描述：</td>
+                        <td>古董</td>
+                    </tr>
+                    <tr>
+                        <td>开始时间：</td>
+                        <td>2020年08月05日10:57:34</td>
+                    </tr>
+                    <tr>
+                        <td>结束时间：</td>
+                        <td>2020-08-05 10:57:46</td>
+                    </tr>
+                    <tr>
+                        <td>起拍价：</td>
+                        <td>2000</td>
+                    </tr>
+                </table>
+            </div>
+            <div id="img">
+                <img src="../images/ad20.jpg" alt="花瓶图片"/>
+            </div>
+
+            <!--竞价展示-->
+            <div id="price">
+                <span>出价:<input type="text" placeholder="您要出的价格" class="textT"><input type="button" value="竞拍" class="button"></span>
+                <p style="font-size: 10px;color: red;margin-left: 50px">不能低于最高价</p>
+            </div>
+            <div id="button2">
+                <span><input type="button" value="刷新"><input type="button" value="返回列表"></span>
+            </div>
+
+            <div id="priceHistory">
+                <span>出价记录</span>
+                <table id="priceTable">
+                    <tr>
+                        <td>竞拍时间</td>
+                        <td>竞拍价格</td>
+                        <td>竞拍人</td>
+                    </tr>
+                    <tr>
+                        <td>2020年08月05日11:28:24</td>
+                        <td>5000.00</td>
+                        <td>张三</td>
+                    </tr>
+                    <tr>
+                        <td>2020-08-05 11:28:43</td>
+                        <td>40000.00</td>
+                        <td>李四</td>
+                    </tr>
+                    <tr>
+                        <td>2020年08月05日11:29:00</td>
+                        <td>7000.00</td>
+                        <td>王五</td>
+                    </tr>
+                    <tr>
+                        <td>2020年08月05日11:29:14</td>
+                        <td>5000.00</td>
+                        <td>赵六</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
