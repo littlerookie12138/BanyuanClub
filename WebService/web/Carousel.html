@@ -2,9 +2,83 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>$Title$</title>
+    <title>轮播</title>
+    <style>
+        #showWindow{
+            width: 400px;
+            height: 300px;
+            margin: auto;
+            border: 1px solid lightskyblue;
+            display: none;
+        }
+
+        #showWindow #list{
+            display: none;
+        }
+
+        #showWindow #list .on{
+            display: block;
+        }
+    </style>
 </head>
 <body>
-$END$
+    <div id="showWindow" >
+        <ul id="pic">
+            <li><img src="images/ad20.jpg" alt=""></li>
+            <li><img src="images/logo.jpg" alt=""></li>
+            <li><img src="images/img1.jpg" alt=""></li>
+        </ul>
+        <ul id="list">
+            <li class="on">1</li>
+            <li>2</li>
+            <li>3</li>
+        </ul>
+    </div>
 </body>
+<script>
+    window.onload = function () {
+        document.getElementById("showWindow").style.display = "block";
+        var timer = setInterval(autoplay, 2000);
+        var list = document.getElementById("list").getElementsByTagName('li');
+        var picList = document.getElementById("pic").getElementsByTagName('li');
+        var index = 0;
+        // 鼠标在图片区域时清除计时器
+        document.getElementById("showWindow").onmouseover = function () {
+            clearInterval(timer);
+        }
+
+        // 鼠标离开时重新计时
+        document.getElementById("showWindow").onmouseout = function () {
+            timer = setInterval(autoplay, 2000);
+        }
+
+        // 当鼠标在小圆点上时显示对应的图片
+        for (var i = 0; i <= list.length; i ++) {
+            list[i].onmouseover = function () {
+                clearInterval(timer);
+                index = this.innerText - 1;
+                changePic(index);
+            };
+        }
+
+        // 自动播放
+        function autoplay() {
+            if (++index >= picList.length) {
+                index = 0;
+            }
+            changePic(index);
+        }
+
+
+        function changePic(curIndex) {
+            for (var i = 0; i < picList.length; i++) {
+                picList[i].style.display = "none";
+                list[i].className = "";
+            }
+            picList[curIndex].style.display = "block";
+            list[i].className = "on";
+        }
+    }
+
+</script>
 </html>

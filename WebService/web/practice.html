@@ -2,9 +2,28 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>$Title$</title>
+    <title>Title</title>
 </head>
 <body>
-$END$
+    <div style="width: 100px;height: 100px; border: 1px solid black" id="demo" >
+
+    </div>
 </body>
+<script>
+        var demo = document.getElementById("demo");
+        demo.onmouseover = function (ev) {
+            var a = Math.floor(Math.random() * 256);
+            var b = Math.floor(Math.random() * 256);
+            var c = Math.floor(Math.random() * 256);
+            demo.style.backgroundColor = "rgb(" + a + "," + b + "," + c + ")";
+        }
+
+        demo.onmouseout = function (ev) {
+            var a = Math.floor(Math.random() * 256);
+            var b = Math.floor(Math.random() * 256);
+            var c = Math.floor(Math.random() * 256);
+            demo.style.backgroundColor = "rgb(" + a + "," + b + "," + c + ")";
+        }
+
+</script>
 </html>

@@ -2,9 +2,52 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>$Title$</title>
+    <title>Title</title>
 </head>
 <body>
-$END$
+    <div id="showTimeOut">
+
+    </div>
 </body>
+<script>
+    window.onload = function () {
+        countdown();
+        function addzero(i) {
+            return i < 10 ? "0" + i : i + "";
+        }
+        function countdown() {
+            var nowdate = new Date();
+            var enddate = new Date("2020/08/06, 21:00:00");
+
+            var leftDate = parseInt((enddate.getTime() - nowdate.getTime()) / 1000);
+            var d = parseInt(leftDate / (24*60*60)),
+                h = parseInt(leftDate / (60 * 60) % 24),
+                m = parseInt(leftDate / 60 % 60),
+                s = parseInt(leftDate % 60);
+
+
+
+            d = addzero(d);
+            h = addzero(h);
+            m = addzero(m);
+            s = addzero(s);
+
+            // console.log(d);
+            // console.log(h);
+            // console.log(m);
+            // console.log(s);
+
+            document.querySelector("#showTimeOut").innerHTML = '活动倒计时' + d + '天' + h + '时' + m + '分' + s + '秒';
+            if (leftDate <= 0) {
+                document.querySelector("#showTimeOut").innerHTML = "活动以结束";
+                return;
+            }
+            setTimeout(countdown, 1000);
+        }
+
+    }
+
+
+
+</script>
 </html>
