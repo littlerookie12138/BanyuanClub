@@ -12,6 +12,7 @@ public class JDBCUtil {
 
     private static String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";
     private static String DB_URL = "jdbc:mysql://localhost:3306/MarketBillSystem?useSSL=false";
+    //   mysql8.0版本要求加上时区                                                               &serverTimezone=UTC
 
     private static Connection connection;
     private static PreparedStatement preparedStatement;
