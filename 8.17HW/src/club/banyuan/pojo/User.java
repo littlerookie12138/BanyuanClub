@@ -1,3 +1,5 @@
+package club.banyuan.pojo;
+
 public class User {
     private Integer id;
     private String loginName;
@@ -9,11 +11,11 @@ public class User {
     private String mobile;
     private Integer type;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -41,11 +43,11 @@ public class User {
         this.password = password;
     }
 
-    public int getSex() {
+    public Integer getSex() {
         return sex;
     }
 
-    public void setSex(int sex) {
+    public void setSex(Integer sex) {
         this.sex = sex;
     }
 
@@ -73,11 +75,11 @@ public class User {
         this.mobile = mobile;
     }
 
-    public int getType() {
+    public Integer getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(Integer type) {
         this.type = type;
     }
 
