@@ -1,24 +1,24 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<link type="text/css" rel="stylesheet" href="css/style.css" />
     <!--[if IE 6]>
     <script src="js/iepng.js" type="text/javascript"></script>
         <script type="text/javascript">
-           EvPNG.fix('div, ul, img, li, input, a'); 
+           EvPNG.fix('div, ul, img, li, input, a');
         </script>
-    <![endif]-->    
+    <![endif]-->
     <script type="text/javascript" src="js/jquery-1.11.1.min_044d0927.js"></script>
 	<script type="text/javascript" src="js/jquery.bxslider_e88acd1b.js"></script>
-    
+
     <script type="text/javascript" src="js/jquery-1.8.2.min.js"></script>
-    <script type="text/javascript" src="js/menu.js"></script>    
-        
+    <script type="text/javascript" src="js/menu.js"></script>
+
 	<script type="text/javascript" src="js/select.js"></script>
-    
+
 	<script type="text/javascript" src="js/lrscroll.js"></script>
-    
+
     <script type="text/javascript" src="js/iban.js"></script>
     <script type="text/javascript" src="js/fban.js"></script>
     <script type="text/javascript" src="js/f_ban.js"></script>
@@ -26,28 +26,27 @@
     <script type="text/javascript" src="js/bban.js"></script>
     <script type="text/javascript" src="js/hban.js"></script>
     <script type="text/javascript" src="js/tban.js"></script>
-    
+
 	<script type="text/javascript" src="js/lrscroll_1.js"></script>
-    
-    
+
+    <script type="text/javascript">
+        $(function(){
+            $("#loginBtn").click(function () {
+                var username = $("#username").val();
+                var password = $(".l_pwd").val();
+                console.log(username);
+                if(username.trim()=="" || password.trim() == ""){
+                    $("#userMsg").html("<br/>用户名或密码不能为空");
+                } else {
+                    $("#loginForm").submit();
+                }
+            });
+        });
+    </script>
+
 <title>购物街</title>
 </head>
-
-<script>
-    $(function(){
-        $(".log_btn").click(function(){
-            var loginName = $(".l_user").val();
-            var password = $(".l_pwd").val();
-
-            if (loginName.trim() != "" && password.trim() != "") {
-                alert("提交表单");
-            } else {
-                alert("用户名或密码不能为空");
-            }
-        });
-    });
-</script>
-<body>  
+<body>
 <!--Begin Header Begin-->
 <div class="soubg">
 	<div class="sou">
@@ -59,16 +58,16 @@
         </span>
     </div>
 </div>
-<!--End Header End--> 
+<!--End Header End-->
 <!--Begin Login Begin-->
-<div class="log_bg">	
+<div class="log_bg">
     <div class="top">
         <div class="logo"><a href="Index.html"><img src="images/logo.png" /></a></div>
     </div>
 	<div class="login">
     	<div class="log_img"><img src="images/l_img.png" width="611" height="425" /></div>
 		<div class="log_c">
-        	<form action="login.do" method="post">
+        	<form id="loginForm" action="login.do" method="post">
             <table border="0" style="width:370px; font-size:14px; margin-top:30px;" cellspacing="0" cellpadding="0">
               <tr height="50" valign="top">
               	<td width="55">&nbsp;</td>
@@ -77,13 +76,22 @@
                     <span class="fr">还没有商城账号，<a href="Regist.html" style="color:#ff4e00;">立即注册</a></span>
                 </td>
               </tr>
+                <tr>
+                    <td colspan="2"><%
+                        Object msg = request.getAttribute("errorMsg");
+                        out.println(msg==null?"":msg);
+                    %>
+                    </td>
+                </tr>
               <tr height="70">
                 <td>用户名</td>
-                <td><input type="text" value="" class="l_user" name="loginName"/></td>
+                <td><input name="username" id="username" type="text" value="" class="l_user" />
+                    <span id="userMsg"></span>
+                </td>
               </tr>
               <tr height="70">
                 <td>密&nbsp; &nbsp; 码</td>
-                <td><input type="password" value="" class="l_pwd" name="password"/></td>
+                <td><input name="password" type="password" value="" class="l_pwd" /></td>
               </tr>
               <tr>
               	<td>&nbsp;</td>
@@ -96,22 +104,22 @@
               </tr>
               <tr height="60">
               	<td>&nbsp;</td>
-                <td><input type="submit" value="登录" class="log_btn" /></td>
+                <td><input id="loginBtn" type="button" value="登录" class="log_btn" /></td>
               </tr>
             </table>
             </form>
         </div>
     </div>
 </div>
-<!--End Login End--> 
+<!--End Login End-->
 <!--Begin Footer Begin-->
 <div class="btmbg">
 		<div class="btm">
         	备案/许可证编号：京ICP备070360号   Copyright © 2016-2019 购物街 All Rights Reserved. 复制必究 , Technical Support: ICT Group <br />
             <img src="images/b_1.gif" width="98" height="33" /><img src="images/b_2.gif" width="98" height="33" /><img src="images/b_3.gif" width="98" height="33" /><img src="images/b_4.gif" width="98" height="33" /><img src="images/b_5.gif" width="98" height="33" /><img src="images/b_6.gif" width="98" height="33" />
-        </div>    	
+        </div>
 </div>
-<!--End Footer End -->    
+<!--End Footer End -->
 
 </body>
 

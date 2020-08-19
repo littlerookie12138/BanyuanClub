@@ -28,7 +28,8 @@ public class LoginServlet extends HttpServlet {
         UserServiceImpl userService = new UserServiceImpl();
         try {
             if (userService.login(user) != null) {
-                response.sendRedirect("Sell.html");
+                request.setAttribute("loginUser", user);
+                request.getRequestDispatcher("result.jsp").forward(request, response);
             } else {
                 response.sendRedirect("login.html");
             }
