@@ -1,8 +1,0 @@
-package club.banyuan.baseDao;
-
-import club.banyuan.pojo.User;
-
-public interface UserDao extends IBaseDao{
-    public User getUserByUserNameAndPwd(String username, String password) throws Exception;
-    public User addUser(User user);
-}
